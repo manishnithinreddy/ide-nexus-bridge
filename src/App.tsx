@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Sidebar } from "@/components/Layout/Sidebar";
 import { Dashboard } from "@/pages/Dashboard";
 import { ApiTesting } from "@/pages/ApiTesting";
+import { CodeBridge } from "@/pages/CodeBridge";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/api-testing" element={<ApiTesting />} />
+              <Route path="/code-bridge" element={<CodeBridge />} />
               <Route path="/gitlab" element={<div className="p-6"><h1 className="text-2xl font-bold">GitLab Integration</h1><p className="text-gray-400 mt-2">Coming soon...</p></div>} />
               <Route path="/docker" element={<div className="p-6"><h1 className="text-2xl font-bold">Docker Management</h1><p className="text-gray-400 mt-2">Coming soon...</p></div>} />
               <Route path="/servers" element={<div className="p-6"><h1 className="text-2xl font-bold">Server Management</h1><p className="text-gray-400 mt-2">Coming soon...</p></div>} />

@@ -10,15 +10,17 @@ import {
   Database,
   Settings,
   Users,
-  Activity
+  Activity,
+  Code2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, color: 'text-blue-400' },
+  { name: 'CodeBridge', href: '/code-bridge', icon: Code2, color: 'text-purple-400' },
+  { name: 'API Testing', href: '/api-testing', icon: Zap, color: 'text-green-400' },
   { name: 'GitLab', href: '/gitlab', icon: GitBranch, color: 'text-orange-400' },
   { name: 'Docker', href: '/docker', icon: Container, color: 'text-cyan-400' },
-  { name: 'API Testing', href: '/api-testing', icon: Zap, color: 'text-green-400' },
   { name: 'Servers', href: '/servers', icon: Server, color: 'text-purple-400' },
   { name: 'AI-DB', href: '/ai-db', icon: Database, color: 'text-pink-400' },
 ];
