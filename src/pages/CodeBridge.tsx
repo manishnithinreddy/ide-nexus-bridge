@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { CodeGenerator } from '@/components/CodeGeneration/CodeGenerator';
 import { CodeBridgeChat } from '@/components/Chat/CodeBridgeChat';
-import { TabManager } from '@/components/Tabs/TabManager';
+import { SimpleTabSwitcher } from '@/components/Tabs/SimpleTabSwitcher';
 
 interface CodeBridgeProps {
   containerSize?: string;
@@ -24,7 +24,11 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
         </p>
       </div>
 
-      <TabManager activeTab={activeTab} onTabChange={setActiveTab} />
+      <SimpleTabSwitcher 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        containerSize={containerSize}
+      />
 
       <div className="flex-1 mt-4">
         {activeTab === 'generator' && (
