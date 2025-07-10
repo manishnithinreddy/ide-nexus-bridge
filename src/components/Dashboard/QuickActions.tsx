@@ -22,8 +22,13 @@ const quickActions = [
   { icon: Database, label: 'Query DB', color: 'bg-pink-500 hover:bg-pink-600' },
 ];
 
-export const QuickActions = () => {
+interface QuickActionsProps {
+  containerSize?: string;
+}
+
+export const QuickActions: React.FC<QuickActionsProps> = ({ containerSize }) => {
   const navigate = useNavigate();
+  const isCompact = containerSize === 'compact';
 
   const handleAction = (action: typeof quickActions[0]) => {
     if (action.route) {
@@ -35,17 +40,27 @@ export const QuickActions = () => {
 
   return (
     <Card className="bg-gray-800 border-gray-700">
-      <div className="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className={isCompact ? 'p-3' : 'p-6'}>
+        <h3 className={`font-semibold text-white mb-${isCompact ? '2' : '4'} ${isCompact ? 'text-sm' : 'text-lg'}`}>
+          Quick Actions
+        </h3>
+        <div className={`grid gap-${isCompact ? '2' : '3'} ${
+          isCompact 
+            ? 'grid-cols-2' 
+            : 'grid-cols-2 md:grid-cols-3'
+        }`}>
           {quickActions.map((action, index) => (
             <Button
               key={index}
-              className={`${action.color} text-white flex items-center justify-center space-x-2 h-12`}
+              className={`${action.color} text-white flex items-center justify-center space-x-2 ${
+                isCompact ? 'h-8 text-xs' : 'h-12'
+              }`}
               onClick={() => handleAction(action)}
             >
-              <action.icon className="h-5 w-5" />
-              <span className="hidden sm:inline">{action.label}</span>
+              <action.icon className={isCompact ? 'h-3 w-3' : 'h-5 w-5'} />
+              <span className={`${isCompact ? 'hidden sm:inline text-xs' : 'hidden sm:inline'}`}>
+                {isCompact ? action.label.split(' ')[0] : action.label}
+              </span>
             </Button>
           ))}
         </div>

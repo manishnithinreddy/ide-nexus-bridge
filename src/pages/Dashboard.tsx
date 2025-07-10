@@ -11,7 +11,14 @@ import {
   Database
 } from 'lucide-react';
 
-export const Dashboard = () => {
+interface DashboardProps {
+  containerSize?: string;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ containerSize }) => {
+  const isCompact = containerSize === 'compact';
+  const isMedium = containerSize === 'medium';
+  
   const services = [
     {
       title: 'GitLab',
@@ -91,27 +98,35 @@ export const Dashboard = () => {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className={`space-y-${isCompact ? '3' : '6'} ${isCompact ? 'p-3' : 'p-6'}`}>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">DevOps Dashboard</h1>
-        <p className="text-gray-400">
-          Manage your development workflow from a single interface
+        <h1 className={`font-bold text-white mb-2 ${isCompact ? 'text-xl' : 'text-3xl'}`}>
+          DevOps Dashboard
+        </h1>
+        <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
+          {isCompact ? 'DevOps workflow management' : 'Manage your development workflow from a single interface'}
         </p>
       </div>
 
       {/* Quick Actions */}
-      <QuickActions />
+      <QuickActions containerSize={containerSize} />
 
       {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className={`grid gap-${isCompact ? '3' : '6'} ${
+        isCompact 
+          ? 'grid-cols-1' 
+          : isMedium 
+            ? 'grid-cols-1 md:grid-cols-2' 
+            : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+      }`}>
         {services.map((service, index) => (
-          <ServiceCard key={index} {...service} />
+          <ServiceCard key={index} {...service} containerSize={containerSize} />
         ))}
       </div>
 
       {/* Recent Activity */}
-      <RecentActivity />
+      {!isCompact && <RecentActivity />}
     </div>
   );
 };

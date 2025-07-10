@@ -11,9 +11,12 @@ import {
   Settings,
   Users,
   Activity,
-  Code2
+  Code2,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, color: 'text-blue-400' },
@@ -31,53 +34,120 @@ const bottomNavigation = [
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  collapsed?: boolean;
+  onToggle?: () => void;
+  containerSize?: string;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, containerSize }) => {
+  const isCompact = containerSize === 'compact';
+  
   return (
-    <div className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col h-full">
+    <div className={cn(
+      "bg-gray-900 border-r border-gray-800 flex flex-col h-full transition-all duration-300",
+      collapsed ? "w-16" : "w-64"
+    )}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold text-white">DevOps Toolkit</h1>
-        <p className="text-sm text-gray-400 mt-1">Cross-platform IDE Plugin</p>
+      <div className={cn(
+        "border-b border-gray-800 flex items-center justify-between",
+        isCompact ? "p-2" : "p-4"
+      )}>
+        {!collapsed && (
+          <div>
+            <h1 className={cn(
+              "font-bold text-white",
+              isCompact ? "text-sm" : "text-xl"
+            )}>
+              DevOps Toolkit
+            </h1>
+            {!isCompact && (
+              <p className="text-xs text-gray-400 mt-1">Cross-platform IDE Plugin</p>
+            )}
+          </div>
+        )}
+        
+        {onToggle && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="text-gray-400 hover:text-white hover:bg-gray-800 p-1"
+          >
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        )}
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className={cn(
+        "flex-1 space-y-1",
+        isCompact ? "p-1" : "p-4"
+      )}>
         {navigation.map((item) => (
           <NavLink
             key={item.name}
             to={item.href}
             className={({ isActive }) =>
               cn(
-                'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center rounded-lg text-sm font-medium transition-colors group',
+                isCompact ? 'px-2 py-1' : 'px-3 py-2',
                 isActive
                   ? 'bg-gray-800 text-white'
                   : 'text-gray-300 hover:bg-gray-800 hover:text-white'
               )
             }
+            title={collapsed ? item.name : undefined}
           >
-            <item.icon className={cn('h-5 w-5 mr-3', item.color)} />
-            {item.name}
+            <item.icon className={cn(
+              'flex-shrink-0',
+              item.color,
+              collapsed ? 'h-5 w-5' : 'h-5 w-5 mr-3'
+            )} />
+            {!collapsed && (
+              <span className={cn(
+                "truncate",
+                isCompact ? "text-xs" : "text-sm"
+              )}>
+                {item.name}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
 
       {/* Bottom Navigation */}
-      <div className="p-4 border-t border-gray-800 space-y-2">
+      <div className={cn(
+        "border-t border-gray-800 space-y-1",
+        isCompact ? "p-1" : "p-4"
+      )}>
         {bottomNavigation.map((item) => (
           <NavLink
             key={item.name}
             to={item.href}
             className={({ isActive }) =>
               cn(
-                'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center rounded-lg text-sm font-medium transition-colors',
+                isCompact ? 'px-2 py-1' : 'px-3 py-2',
                 isActive
                   ? 'bg-gray-800 text-white'
                   : 'text-gray-300 hover:bg-gray-800 hover:text-white'
               )
             }
+            title={collapsed ? item.name : undefined}
           >
-            <item.icon className="h-5 w-5 mr-3 text-gray-400" />
-            {item.name}
+            <item.icon className={cn(
+              'flex-shrink-0 text-gray-400',
+              collapsed ? 'h-5 w-5' : 'h-5 w-5 mr-3'
+            )} />
+            {!collapsed && (
+              <span className={cn(
+                "truncate",
+                isCompact ? "text-xs" : "text-sm"
+              )}>
+                {item.name}
+              </span>
+            )}
           </NavLink>
         ))}
       </div>
