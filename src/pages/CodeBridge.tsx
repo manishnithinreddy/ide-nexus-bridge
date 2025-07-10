@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ServiceGrid } from '@/components/CodeBridge/ServiceGrid';
 import { AICodeGenerator } from '@/components/CodeBridge/AICodeGenerator';
@@ -19,17 +18,21 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
   const { toast } = useToast();
   const isCompact = containerSize === 'compact';
 
-  const { data: services = [], isLoading } = useQuery({
+  const { data: services = [], isLoading, error } = useQuery({
     queryKey: ['services'],
     queryFn: () => codeBridgeApi.getServices(),
-    onError: (error) => {
+  });
+
+  // Show error toast if there's an error
+  React.useEffect(() => {
+    if (error) {
       toast({
         title: 'Connection Error',
         description: 'Failed to connect to CodeBridge services. Using demo data.',
         variant: 'destructive',
       });
-    },
-  });
+    }
+  }, [error, toast]);
 
   // Demo data fallback
   const demoServices: CodeBridgeService[] = [
