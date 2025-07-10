@@ -11,14 +11,16 @@ import { useToast } from '@/hooks/use-toast';
 
 interface CodeBridgeChatProps {
   projectId: string;
+  containerSize?: string;
 }
 
-export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => {
+export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId, containerSize }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const isCompact = containerSize === 'compact';
 
   useEffect(() => {
     loadChatHistory();
@@ -84,9 +86,11 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
 
   return (
     <Card className="bg-gray-800 border-gray-700 h-full flex flex-col">
-      <div className="p-4 border-b border-gray-700">
+      <div className={`border-b border-gray-700 ${isCompact ? 'p-3' : 'p-4'}`}>
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">CodeBridge Assistant</h3>
+          <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+            CodeBridge Assistant
+          </h3>
           <Badge variant="outline" className="border-blue-500 text-blue-400">
             <Bot className="h-3 w-3 mr-1" />
             AI Assistant
@@ -94,14 +98,14 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className={`flex-1 overflow-y-auto space-y-4 ${isCompact ? 'p-3' : 'p-4'}`}>
         {messages.map((message) => (
           <div
             key={message.id}
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[80%] rounded-lg p-3 ${
+              className={`max-w-[80%] rounded-lg ${isCompact ? 'p-2' : 'p-3'} ${
                 message.role === 'user'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-100'
@@ -118,7 +122,9 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
                 </span>
               </div>
               
-              <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+              <div className={`whitespace-pre-wrap ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                {message.content}
+              </div>
               
               {message.codeBlocks && message.codeBlocks.length > 0 && (
                 <div className="mt-3 space-y-2">
@@ -145,7 +151,7 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
                           <Copy className="h-3 w-3" />
                         </Button>
                       </div>
-                      <pre className="text-xs text-green-400 overflow-x-auto">
+                      <pre className={`text-green-400 overflow-x-auto ${isCompact ? 'text-xs' : 'text-sm'}`}>
                         <code>{block.code}</code>
                       </pre>
                     </div>
@@ -158,10 +164,10 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
         
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-gray-700 text-gray-100 rounded-lg p-3 max-w-[80%]">
+            <div className={`bg-gray-700 text-gray-100 rounded-lg max-w-[80%] ${isCompact ? 'p-2' : 'p-3'}`}>
               <div className="flex items-center gap-2">
                 <Bot className="h-4 w-4" />
-                <span className="text-sm">Thinking...</span>
+                <span className={isCompact ? 'text-xs' : 'text-sm'}>Thinking...</span>
                 <div className="flex space-x-1">
                   <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
                   <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -175,20 +181,21 @@ export const CodeBridgeChat: React.FC<CodeBridgeChatProps> = ({ projectId }) => 
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-700">
+      <div className={`border-t border-gray-700 ${isCompact ? 'p-3' : 'p-4'}`}>
         <div className="flex space-x-2">
           <Input
-            placeholder="Ask me anything about your code..."
+            placeholder={isCompact ? "Ask me anything..." : "Ask me anything about your code..."}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="bg-gray-700 border-gray-600 text-white"
+            className={`bg-gray-700 border-gray-600 text-white ${isCompact ? 'text-sm' : ''}`}
             disabled={loading}
           />
           <Button 
             onClick={sendMessage}
             disabled={loading || !input.trim()}
             className="bg-blue-600 hover:bg-blue-700"
+            size={isCompact ? "sm" : "default"}
           >
             <Send className="h-4 w-4" />
           </Button>
