@@ -126,7 +126,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ containerSize }) => {
       </div>
 
       {/* Recent Activity */}
-      {!isCompact && <RecentActivity />}
+      {!isCompact && <RecentActivity containerSize={containerSize} />}
     </div>
   );
 };
