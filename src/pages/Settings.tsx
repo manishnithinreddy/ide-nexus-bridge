@@ -2,289 +2,297 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Settings as SettingsIcon, 
   User, 
-  Bell, 
   Shield, 
-  Palette,
+  Bell, 
+  Palette, 
+  Globe,
+  Key,
   Database,
-  Zap,
-  Save
+  Monitor,
+  Smartphone
 } from 'lucide-react';
 
-export const Settings = () => {
+interface SettingsProps {
+  containerSize?: string;
+}
+
+export const Settings: React.FC<SettingsProps> = ({ containerSize }) => {
+  const isCompact = containerSize === 'compact';
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,
     desktop: true,
-    slack: false
+    security: true
   });
 
-  const [preferences, setPreferences] = useState({
-    darkMode: true,
-    autoSave: true,
-    showLineNumbers: true,
-    enableAI: true
+  const [privacy, setPrivacy] = useState({
+    analytics: false,
+    sharing: true,
+    publicProfile: false
   });
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-          <p className="text-gray-400">Customize your DevOps toolkit experience</p>
-        </div>
-        <Button className="bg-blue-500 hover:bg-blue-600">
-          <Save className="h-4 w-4 mr-2" />
-          Save Changes
-        </Button>
+    <div className={`space-y-${isCompact ? '3' : '6'} ${isCompact ? 'p-3' : 'p-6'}`}>
+      <div>
+        <h1 className={`font-bold text-white mb-2 flex items-center gap-3 ${isCompact ? 'text-xl' : 'text-3xl'}`}>
+          <SettingsIcon className={`${isCompact ? 'h-6 w-6' : 'h-8 w-8'} text-gray-400`} />
+          Settings
+        </h1>
+        <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
+          {isCompact ? 'Manage app preferences' : 'Manage your application preferences and configurations'}
+        </p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-4">
+      <Tabs defaultValue="general" className="space-y-4">
         <TabsList className="bg-gray-800">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="preferences">Preferences</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="general" className={isCompact ? 'text-xs px-2' : ''}>General</TabsTrigger>
+          <TabsTrigger value="notifications" className={isCompact ? 'text-xs px-2' : ''}>
+            {isCompact ? 'Notifs' : 'Notifications'}
+          </TabsTrigger>
+          <TabsTrigger value="security" className={isCompact ? 'text-xs px-2' : ''}>Security</TabsTrigger>
+          <TabsTrigger value="integrations" className={isCompact ? 'text-xs px-2' : ''}>
+            {isCompact ? 'Integrations' : 'Integrations'}
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-4">
-          <Card className="bg-gray-800 border-gray-700 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <User className="h-6 w-6 text-blue-400" />
-              <h3 className="text-lg font-semibold text-white">Profile Information</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name" className="text-gray-300">Full Name</Label>
-                  <Input 
-                    id="name" 
-                    defaultValue="John Doe" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
+        <TabsContent value="general" className="space-y-4">
+          <div className={`grid gap-${isCompact ? '3' : '4'} ${isCompact ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+            {/* Profile Settings */}
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <User className="h-5 w-5 text-blue-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    Profile Settings
+                  </h3>
                 </div>
-                
-                <div>
-                  <Label htmlFor="email" className="text-gray-300">Email Address</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    defaultValue="john.doe@company.com" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="role" className="text-gray-300">Role</Label>
-                  <Input 
-                    id="role" 
-                    defaultValue="Senior DevOps Engineer" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="department" className="text-gray-300">Department</Label>
-                  <Input 
-                    id="department" 
-                    defaultValue="Engineering" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="timezone" className="text-gray-300">Timezone</Label>
-                  <Input 
-                    id="timezone" 
-                    defaultValue="UTC-8 (Pacific)" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="phone" className="text-gray-300">Phone Number</Label>
-                  <Input 
-                    id="phone" 
-                    defaultValue="+1 (555) 123-4567" 
-                    className="bg-gray-900 border-gray-600 text-white mt-1"
-                  />
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Public Profile
+                    </span>
+                    <Switch 
+                      checked={privacy.publicProfile}
+                      onCheckedChange={(checked) => setPrivacy({...privacy, publicProfile: checked})}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Activity Sharing
+                    </span>
+                    <Switch 
+                      checked={privacy.sharing}
+                      onCheckedChange={(checked) => setPrivacy({...privacy, sharing: checked})}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Analytics Collection
+                    </span>
+                    <Switch 
+                      checked={privacy.analytics}
+                      onCheckedChange={(checked) => setPrivacy({...privacy, analytics: checked})}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+
+            {/* Theme Settings */}
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <Palette className="h-5 w-5 text-purple-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    Appearance
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className={`text-gray-300 block mb-2 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Theme
+                    </label>
+                    <div className="flex space-x-2">
+                      <Badge variant="default" className="cursor-pointer">Dark</Badge>
+                      <Badge variant="outline" className="cursor-pointer border-gray-600 text-gray-400">Light</Badge>
+                      <Badge variant="outline" className="cursor-pointer border-gray-600 text-gray-400">Auto</Badge>
+                    </div>
+                  </div>
+                  <div>
+                    <label className={`text-gray-300 block mb-2 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Color Scheme
+                    </label>
+                    <div className="flex space-x-2">
+                      <div className="w-6 h-6 bg-blue-600 rounded-full cursor-pointer border-2 border-white"></div>
+                      <div className="w-6 h-6 bg-purple-600 rounded-full cursor-pointer"></div>
+                      <div className="w-6 h-6 bg-green-600 rounded-full cursor-pointer"></div>
+                      <div className="w-6 h-6 bg-orange-600 rounded-full cursor-pointer"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Language & Region */}
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <Globe className="h-5 w-5 text-green-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    Language & Region
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className={`text-gray-300 block mb-2 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Language
+                    </label>
+                    <Badge variant="default">English (US)</Badge>
+                  </div>
+                  <div>
+                    <label className={`text-gray-300 block mb-2 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Timezone
+                    </label>
+                    <Badge variant="outline" className="border-gray-600 text-gray-400">
+                      UTC-8 (Pacific Time)
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Display Settings */}
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <Monitor className="h-5 w-5 text-cyan-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    Display
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Compact Mode
+                    </span>
+                    <Switch checked={isCompact} disabled />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Auto-resize
+                    </span>
+                    <Switch checked={true} />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
-          <Card className="bg-gray-800 border-gray-700 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <Bell className="h-6 w-6 text-yellow-400" />
-              <h3 className="text-lg font-semibold text-white">Notification Preferences</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Email Notifications</Label>
-                  <p className="text-gray-400 text-sm">Receive notifications via email</p>
-                </div>
-                <Switch 
-                  checked={notifications.email}
-                  onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
-                />
+          <Card className="bg-gray-800 border-gray-700">
+            <div className={isCompact ? 'p-3' : 'p-4'}>
+              <div className="flex items-center mb-4">
+                <Bell className="h-5 w-5 text-yellow-400 mr-2" />
+                <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                  Notification Preferences
+                </h3>
               </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Push Notifications</Label>
-                  <p className="text-gray-400 text-sm">Receive push notifications on mobile</p>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Email Notifications
+                    </span>
+                    <p className="text-gray-500 text-sm">Receive updates via email</p>
+                  </div>
+                  <Switch 
+                    checked={notifications.email}
+                    onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
+                  />
                 </div>
-                <Switch 
-                  checked={notifications.push}
-                  onCheckedChange={(checked) => setNotifications({...notifications, push: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Desktop Notifications</Label>
-                  <p className="text-gray-400 text-sm">Show desktop notifications</p>
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Push Notifications
+                    </span>
+                    <p className="text-gray-500 text-sm">Browser push notifications</p>
+                  </div>
+                  <Switch 
+                    checked={notifications.push}
+                    onCheckedChange={(checked) => setNotifications({...notifications, push: checked})}
+                  />
                 </div>
-                <Switch 
-                  checked={notifications.desktop}
-                  onCheckedChange={(checked) => setNotifications({...notifications, desktop: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Slack Integration</Label>
-                  <p className="text-gray-400 text-sm">Send notifications to Slack</p>
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Desktop Notifications
+                    </span>
+                    <p className="text-gray-500 text-sm">System desktop alerts</p>
+                  </div>
+                  <Switch 
+                    checked={notifications.desktop}
+                    onCheckedChange={(checked) => setNotifications({...notifications, desktop: checked})}
+                  />
                 </div>
-                <Switch 
-                  checked={notifications.slack}
-                  onCheckedChange={(checked) => setNotifications({...notifications, slack: checked})}
-                />
-              </div>
-            </div>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="preferences" className="space-y-4">
-          <Card className="bg-gray-800 border-gray-700 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <Palette className="h-6 w-6 text-purple-400" />
-              <h3 className="text-lg font-semibold text-white">Application Preferences</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Dark Mode</Label>
-                  <p className="text-gray-400 text-sm">Use dark theme for the interface</p>
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                    <span className={`text-gray-300 ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Security Alerts
+                    </span>
+                    <p className="text-gray-500 text-sm">Critical security notifications</p>
+                  </div>
+                  <Switch 
+                    checked={notifications.security}
+                    onCheckedChange={(checked) => setNotifications({...notifications, security: checked})}
+                  />
                 </div>
-                <Switch 
-                  checked={preferences.darkMode}
-                  onCheckedChange={(checked) => setPreferences({...preferences, darkMode: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Auto Save</Label>
-                  <p className="text-gray-400 text-sm">Automatically save changes</p>
-                </div>
-                <Switch 
-                  checked={preferences.autoSave}
-                  onCheckedChange={(checked) => setPreferences({...preferences, autoSave: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Show Line Numbers</Label>
-                  <p className="text-gray-400 text-sm">Display line numbers in code editor</p>
-                </div>
-                <Switch 
-                  checked={preferences.showLineNumbers}
-                  onCheckedChange={(checked) => setPreferences({...preferences, showLineNumbers: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-white">Enable AI Features</Label>
-                  <p className="text-gray-400 text-sm">Use AI-powered code generation and assistance</p>
-                </div>
-                <Switch 
-                  checked={preferences.enableAI}
-                  onCheckedChange={(checked) => setPreferences({...preferences, enableAI: checked})}
-                />
               </div>
             </div>
           </Card>
         </TabsContent>
 
-        <TabsContent value="integrations" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="bg-gray-800 border-gray-700 p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <Database className="h-6 w-6 text-pink-400" />
-                <h3 className="text-lg font-semibold text-white">Database Connections</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">PostgreSQL</span>
-                  <Button size="sm" variant="outline" className="border-gray-600">
-                    Configure
-                  </Button>
+        <TabsContent value="security" className="space-y-4">
+          <div className={`grid gap-${isCompact ? '3' : '4'} ${isCompact ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <Shield className="h-5 w-5 text-red-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    Authentication
+                  </h3>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">MongoDB</span>
-                  <Button size="sm" variant="outline" className="border-gray-600">
-                    Configure
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full bg-gray-700 border-gray-600 text-gray-300">
+                    Change Password
                   </Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Redis</span>
-                  <Button size="sm" variant="outline" className="border-gray-600">
-                    Configure
+                  <Button variant="outline" className="w-full bg-gray-700 border-gray-600 text-gray-300">
+                    Setup 2FA
                   </Button>
                 </div>
               </div>
             </Card>
-            
-            <Card className="bg-gray-800 border-gray-700 p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <Zap className="h-6 w-6 text-green-400" />
-                <h3 className="text-lg font-semibold text-white">External Services</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">GitLab</span>
-                  <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-                    Connected
-                  </Button>
+
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center mb-4">
+                  <Key className="h-5 w-5 text-blue-400 mr-2" />
+                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                    API Keys
+                  </h3>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Docker Hub</span>
-                  <Button size="sm" variant="outline" className="border-gray-600">
-                    Connect
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full bg-gray-700 border-gray-600 text-gray-300">
+                    Generate API Key
                   </Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Slack</span>
-                  <Button size="sm" variant="outline" className="border-gray-600">
-                    Connect
+                  <Button variant="outline" className="w-full bg-gray-700 border-gray-600 text-gray-300">
+                    Manage Keys
                   </Button>
                 </div>
               </div>
@@ -292,64 +300,48 @@ export const Settings = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-4">
-          <Card className="bg-gray-800 border-gray-700 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <Shield className="h-6 w-6 text-green-400" />
-              <h3 className="text-lg font-semibold text-white">Security Settings</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="current-password" className="text-gray-300">Current Password</Label>
-                <Input 
-                  id="current-password" 
-                  type="password" 
-                  className="bg-gray-900 border-gray-600 text-white mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="new-password" className="text-gray-300">New Password</Label>
-                <Input 
-                  id="new-password" 
-                  type="password" 
-                  className="bg-gray-900 border-gray-600 text-white mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="confirm-password" className="text-gray-300">Confirm New Password</Label>
-                <Input 
-                  id="confirm-password" 
-                  type="password" 
-                  className="bg-gray-900 border-gray-600 text-white mt-1"
-                />
-              </div>
-              
-              <div className="pt-4 border-t border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <Label className="text-white">Two-Factor Authentication</Label>
-                    <p className="text-gray-400 text-sm">Add an extra layer of security</p>
+        <TabsContent value="integrations" className="space-y-4">
+          <div className={`grid gap-${isCompact ? '3' : '4'} ${isCompact ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Database className="h-5 w-5 text-green-400 mr-2" />
+                    <span className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Database Connections
+                    </span>
                   </div>
-                  <Button className="bg-green-500 hover:bg-green-600">
-                    Enable 2FA
-                  </Button>
+                  <Badge variant="default">Active</Badge>
                 </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-white">API Access Tokens</Label>
-                    <p className="text-gray-400 text-sm">Manage your API access tokens</p>
-                  </div>
-                  <Button variant="outline" className="border-gray-600">
-                    Manage Tokens
-                  </Button>
-                </div>
+                <p className="text-gray-400 text-sm mb-3">
+                  {isCompact ? '3 connected databases' : 'Manage database connections and credentials'}
+                </p>
+                <Button size="sm" variant="outline" className="bg-gray-700 border-gray-600 text-gray-300">
+                  Configure
+                </Button>
               </div>
-            </div>
-          </Card>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700">
+              <div className={isCompact ? 'p-3' : 'p-4'}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Smartphone className="h-5 w-5 text-purple-400 mr-2" />
+                    <span className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+                      Mobile App
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="border-gray-600 text-gray-400">Inactive</Badge>
+                </div>
+                <p className="text-gray-400 text-sm mb-3">
+                  {isCompact ? 'Connect mobile app' : 'Connect with the CodeBridge mobile application'}
+                </p>
+                <Button size="sm" variant="outline" className="bg-gray-700 border-gray-600 text-gray-300">
+                  Setup
+                </Button>
+              </div>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

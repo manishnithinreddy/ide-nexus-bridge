@@ -1,269 +1,282 @@
 
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Activity as ActivityIcon, 
   GitCommit, 
-  GitPullRequest, 
   Container, 
+  Zap, 
+  Server, 
   Database,
-  Zap,
-  Users,
-  Search,
-  Filter,
-  Clock
+  Clock,
+  User,
+  Calendar,
+  Filter
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export const Activity = () => {
-  const [activities] = useState([
+interface ActivityProps {
+  containerSize?: string;
+}
+
+export const Activity: React.FC<ActivityProps> = ({ containerSize }) => {
+  const isCompact = containerSize === 'compact';
+
+  const activities = [
     {
       id: 1,
-      type: 'git_commit',
-      user: 'John Doe',
-      action: 'pushed 3 commits to',
-      target: 'codeBridge/main',
-      timestamp: '2 minutes ago',
-      details: 'feat: add AI integration endpoints'
+      type: 'git',
+      icon: GitCommit,
+      title: 'Merged pull request #42',
+      description: 'Feature/user-authentication into main',
+      user: 'john.doe',
+      time: '2 minutes ago',
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/10',
+      category: 'development'
     },
     {
       id: 2,
-      type: 'docker_deploy',
-      user: 'Jane Smith',
-      action: 'deployed container',
-      target: 'codebridge-api:latest',
-      timestamp: '15 minutes ago',
-      details: 'Production deployment successful'
+      type: 'docker',
+      icon: Container,
+      title: 'Container deployed',
+      description: 'api-service:v1.2.3 successfully deployed to production',
+      user: 'jane.smith',
+      time: '5 minutes ago',
+      color: 'text-cyan-400',
+      bgColor: 'bg-cyan-500/10',
+      category: 'deployment'
     },
     {
       id: 3,
-      type: 'api_test',
-      user: 'Mike Wilson',
-      action: 'ran API test collection',
-      target: 'Authentication Tests',
-      timestamp: '1 hour ago',
-      details: '12/12 tests passed'
+      type: 'api',
+      icon: Zap,
+      title: 'API test completed',
+      description: 'Authentication endpoints - 12/12 tests passed',
+      user: 'bob.wilson',
+      time: '10 minutes ago',
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/10',
+      category: 'testing'
     },
     {
       id: 4,
-      type: 'db_query',
-      user: 'Sarah Johnson',
-      action: 'executed database query',
-      target: 'Production DB',
-      timestamp: '2 hours ago',
-      details: 'User analytics report generated'
+      type: 'server',
+      icon: Server,
+      title: 'Server health check',
+      description: 'prod-server-01 - All systems operational',
+      user: 'system',
+      time: '15 minutes ago',
+      color: 'text-purple-400',
+      bgColor: 'bg-purple-500/10',
+      category: 'monitoring'
     },
     {
       id: 5,
-      type: 'merge_request',
-      user: 'John Doe',
-      action: 'created merge request',
-      target: 'feature/code-generation',
-      timestamp: '3 hours ago',
-      details: 'Add code generation service endpoints'
+      type: 'database',
+      icon: Database,
+      title: 'Database backup completed',
+      description: 'users_db - 2.3GB backed up successfully',
+      user: 'alice.johnson',
+      time: '1 hour ago',
+      color: 'text-pink-400',
+      bgColor: 'bg-pink-500/10',
+      category: 'maintenance'
     },
     {
       id: 6,
-      type: 'server_alert',
-      user: 'System',
-      action: 'server alert triggered',
-      target: 'Production Server',
-      timestamp: '4 hours ago',
-      details: 'High memory usage detected'
+      type: 'git',
+      icon: GitCommit,
+      title: 'New branch created',
+      description: 'feature/payment-integration created from main',
+      user: 'john.doe',
+      time: '2 hours ago',
+      color: 'text-orange-400',
+      bgColor: 'bg-orange-500/10',
+      category: 'development'
     },
     {
       id: 7,
-      type: 'team_join',
-      user: 'Alex Brown',
-      action: 'joined the team',
-      target: 'DevOps Team',
-      timestamp: '1 day ago',
-      details: 'Welcome to the team!'
+      type: 'server',
+      icon: Server,
+      title: 'Security patch applied',
+      description: 'Critical security update installed on staging-server-02',
+      user: 'bob.wilson',
+      time: '3 hours ago',
+      color: 'text-purple-400',
+      bgColor: 'bg-purple-500/10',
+      category: 'security'
     },
     {
       id: 8,
-      type: 'docker_build',
-      user: 'Mike Wilson',
-      action: 'built Docker image',
-      target: 'postgres-db:15',
-      timestamp: '1 day ago',
-      details: 'Build completed successfully'
+      type: 'api',
+      icon: Zap,
+      title: 'Performance test completed',
+      description: 'Load test - 1000 concurrent users, avg response 120ms',
+      user: 'jane.smith',
+      time: '4 hours ago',
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/10',
+      category: 'testing'
     }
-  ]);
+  ];
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case 'git_commit': return <GitCommit className="h-4 w-4 text-green-400" />;
-      case 'merge_request': return <GitPullRequest className="h-4 w-4 text-blue-400" />;
-      case 'docker_deploy':
-      case 'docker_build': return <Container className="h-4 w-4 text-cyan-400" />;
-      case 'db_query': return <Database className="h-4 w-4 text-pink-400" />;
-      case 'api_test': return <Zap className="h-4 w-4 text-green-400" />;
-      case 'server_alert': return <ActivityIcon className="h-4 w-4 text-yellow-400" />;
-      case 'team_join': return <Users className="h-4 w-4 text-purple-400" />;
-      default: return <ActivityIcon className="h-4 w-4 text-gray-400" />;
-    }
-  };
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const getActivityColor = (type: string) => {
-    switch (type) {
-      case 'git_commit': return 'border-green-500/20 bg-green-500/5';
-      case 'merge_request': return 'border-blue-500/20 bg-blue-500/5';
-      case 'docker_deploy':
-      case 'docker_build': return 'border-cyan-500/20 bg-cyan-500/5';
-      case 'db_query': return 'border-pink-500/20 bg-pink-500/5';
-      case 'api_test': return 'border-green-500/20 bg-green-500/5';
-      case 'server_alert': return 'border-yellow-500/20 bg-yellow-500/5';
-      case 'team_join': return 'border-purple-500/20 bg-purple-500/5';
-      default: return 'border-gray-500/20 bg-gray-500/5';
-    }
-  };
+  const filteredActivities = selectedCategory === 'all' 
+    ? activities 
+    : activities.filter(activity => activity.category === selectedCategory);
 
-  const formatActivityType = (type: string) => {
-    const typeMap: { [key: string]: string } = {
-      'git_commit': 'Git Commit',
-      'merge_request': 'Merge Request',
-      'docker_deploy': 'Docker Deploy',
-      'docker_build': 'Docker Build',
-      'db_query': 'Database Query',
-      'api_test': 'API Test',
-      'server_alert': 'Server Alert',
-      'team_join': 'Team Join'
-    };
-    return typeMap[type] || type;
-  };
+  const categories = [
+    { id: 'all', label: 'All', count: activities.length },
+    { id: 'development', label: 'Development', count: activities.filter(a => a.category === 'development').length },
+    { id: 'deployment', label: 'Deployment', count: activities.filter(a => a.category === 'deployment').length },
+    { id: 'testing', label: 'Testing', count: activities.filter(a => a.category === 'testing').length },
+    { id: 'monitoring', label: 'Monitoring', count: activities.filter(a => a.category === 'monitoring').length },
+    { id: 'maintenance', label: 'Maintenance', count: activities.filter(a => a.category === 'maintenance').length },
+    { id: 'security', label: 'Security', count: activities.filter(a => a.category === 'security').length },
+  ];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Activity Feed</h1>
-          <p className="text-gray-400">Track team activities and system events</p>
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="outline" className="border-gray-600">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-          <Button variant="outline" className="border-gray-600">
-            <Clock className="h-4 w-4 mr-2" />
-            Timeline
-          </Button>
-        </div>
+    <div className={`space-y-${isCompact ? '3' : '6'} ${isCompact ? 'p-3' : 'p-6'}`}>
+      <div>
+        <h1 className={`font-bold text-white mb-2 flex items-center gap-3 ${isCompact ? 'text-xl' : 'text-3xl'}`}>
+          <ActivityIcon className={`${isCompact ? 'h-6 w-6' : 'h-8 w-8'} text-green-400`} />
+          Activity Feed
+        </h1>
+        <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
+          {isCompact ? 'Track system activities' : 'Track all system activities, deployments, and team actions'}
+        </p>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input 
-            placeholder="Search activities..." 
-            className="pl-10 bg-gray-800 border-gray-600"
-          />
-        </div>
-      </div>
+      <Tabs defaultValue="recent" className="space-y-4">
+        <TabsList className="bg-gray-800">
+          <TabsTrigger value="recent" className={isCompact ? 'text-xs px-2' : ''}>Recent</TabsTrigger>
+          <TabsTrigger value="filtered" className={isCompact ? 'text-xs px-2' : ''}>Filtered</TabsTrigger>
+          <TabsTrigger value="analytics" className={isCompact ? 'text-xs px-2' : ''}>Analytics</TabsTrigger>
+        </TabsList>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="bg-gray-800 border-gray-700 p-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-green-500/20 p-2 rounded-lg">
-              <GitCommit className="h-5 w-5 text-green-400" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">Git Activities</p>
-              <p className="text-2xl font-bold text-white">24</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="bg-gray-800 border-gray-700 p-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-cyan-500/20 p-2 rounded-lg">
-              <Container className="h-5 w-5 text-cyan-400" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">Deployments</p>
-              <p className="text-2xl font-bold text-white">8</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="bg-gray-800 border-gray-700 p-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-pink-500/20 p-2 rounded-lg">
-              <Database className="h-5 w-5 text-pink-400" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">DB Queries</p>
-              <p className="text-2xl font-bold text-white">156</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="bg-gray-800 border-gray-700 p-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-green-500/20 p-2 rounded-lg">
-              <Zap className="h-5 w-5 text-green-400" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">API Tests</p>
-              <p className="text-2xl font-bold text-white">342</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <Card className="bg-gray-800 border-gray-700">
-        <div className="p-4 border-b border-gray-700">
-          <h3 className="text-lg font-semibold text-white">Recent Activities</h3>
-        </div>
-        
-        <div className="divide-y divide-gray-700">
-          {activities.map((activity) => (
-            <div key={activity.id} className={`p-4 ${getActivityColor(activity.type)}`}>
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 mt-1">
-                  {getActivityIcon(activity.type)}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-3 mb-1">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gray-700 text-white text-xs">
-                        {activity.user.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <div className="flex-1">
-                      <p className="text-white">
-                        <span className="font-medium">{activity.user}</span>{' '}
-                        <span className="text-gray-300">{activity.action}</span>{' '}
-                        <span className="font-medium text-blue-400">{activity.target}</span>
-                      </p>
-                      <p className="text-gray-400 text-sm mt-1">{activity.details}</p>
+        <TabsContent value="recent" className="space-y-4">
+          <Card className="bg-gray-800 border-gray-700">
+            <div className={isCompact ? 'p-3' : 'p-4'}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>Recent Activity</h3>
+                <Badge variant="outline" className="text-gray-400 border-gray-600">
+                  Live
+                </Badge>
+              </div>
+              <div className="space-y-4">
+                {activities.slice(0, isCompact ? 5 : 8).map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-3">
+                    <div className={cn('p-2 rounded-lg flex-shrink-0', activity.bgColor)}>
+                      <activity.icon className={cn('h-4 w-4', activity.color)} />
                     </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className="border-gray-600 text-gray-300">
-                        {formatActivityType(activity.type)}
-                      </Badge>
-                      <span className="text-gray-400 text-sm">{activity.timestamp}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className={`font-medium text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+                        {activity.title}
+                      </p>
+                      <p className={`text-gray-400 truncate ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                        {activity.description}
+                      </p>
+                      <div className="flex items-center mt-1 space-x-3">
+                        <div className="flex items-center">
+                          <User className="h-3 w-3 text-gray-500 mr-1" />
+                          <span className="text-xs text-gray-500">{activity.user}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-3 w-3 text-gray-500 mr-1" />
+                          <span className="text-xs text-gray-500">{activity.time}</span>
+                        </div>
+                        <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                          {activity.category}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
-        
-        <div className="p-4 border-t border-gray-700 text-center">
-          <Button variant="outline" className="border-gray-600">
-            Load More Activities
-          </Button>
-        </div>
-      </Card>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="filtered" className="space-y-4">
+          {/* Category Filter */}
+          <Card className="bg-gray-800 border-gray-700">
+            <div className={isCompact ? 'p-3' : 'p-4'}>
+              <div className="flex items-center mb-3">
+                <Filter className="h-4 w-4 text-gray-400 mr-2" />
+                <span className={`font-medium text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+                  Filter by Category
+                </span>
+              </div>
+              <div className={`flex flex-wrap gap-2 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                {categories.map((category) => (
+                  <Badge
+                    key={category.id}
+                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    className={`cursor-pointer transition-colors ${
+                      selectedCategory === category.id 
+                        ? 'bg-blue-600 text-white' 
+                        : 'border-gray-600 text-gray-400 hover:border-gray-500'
+                    }`}
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    {category.label} ({category.count})
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* Filtered Results */}
+          <Card className="bg-gray-800 border-gray-700">
+            <div className={isCompact ? 'p-3' : 'p-4'}>
+              <div className="space-y-4">
+                {filteredActivities.map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-3">
+                    <div className={cn('p-2 rounded-lg flex-shrink-0', activity.bgColor)}>
+                      <activity.icon className={cn('h-4 w-4', activity.color)} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`font-medium text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+                        {activity.title}
+                      </p>
+                      <p className={`text-gray-400 truncate ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                        {activity.description}
+                      </p>
+                      <div className="flex items-center mt-1 space-x-3">
+                        <div className="flex items-center">
+                          <User className="h-3 w-3 text-gray-500 mr-1" />
+                          <span className="text-xs text-gray-500">{activity.user}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-3 w-3 text-gray-500 mr-1" />
+                          <span className="text-xs text-gray-500">{activity.time}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="text-center py-12">
+            <Calendar className="h-12 w-12 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">Activity Analytics</h3>
+            <p className="text-gray-400">
+              {isCompact 
+                ? 'Detailed activity insights' 
+                : 'Detailed insights and analytics about team and system activities'
+              }
+            </p>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

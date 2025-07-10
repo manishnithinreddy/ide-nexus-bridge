@@ -2,229 +2,98 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   GitBranch, 
-  GitPullRequest, 
   GitCommit, 
-  Users, 
-  Clock, 
-  CheckCircle, 
+  GitPullRequest, 
+  Play, 
+  Pause, 
+  Clock,
+  CheckCircle,
   XCircle,
-  Plus,
-  Search,
-  Settings
+  AlertCircle
 } from 'lucide-react';
 
-export const GitLab = () => {
-  const [repositories, setRepositories] = useState([
-    {
-      id: 1,
-      name: 'codeBridge',
-      description: 'AI-powered code generation service',
-      branch: 'codegen-bot',
-      lastCommit: '2 hours ago',
-      status: 'active',
-      mergeRequests: 3,
-      pipelines: 'passing'
-    },
-    {
-      id: 2,
-      name: 'devops-toolkit',
-      description: 'Cross-platform IDE plugin for DevOps',
-      branch: 'main',
-      lastCommit: '1 day ago',
-      status: 'active',
-      mergeRequests: 1,
-      pipelines: 'failed'
-    }
-  ]);
+interface GitLabProps {
+  containerSize?: string;
+}
 
-  const [mergeRequests] = useState([
-    {
-      id: 1,
-      title: 'Add code generation endpoints',
-      author: 'John Doe',
-      branch: 'feature/code-gen',
-      status: 'open',
-      created: '2 days ago',
-      commits: 5
-    },
-    {
-      id: 2,
-      title: 'Fix authentication middleware',
-      author: 'Jane Smith',
-      branch: 'bugfix/auth',
-      status: 'merged',
-      created: '1 week ago',
-      commits: 3
-    }
-  ]);
+export const GitLab: React.FC<GitLabProps> = ({ containerSize }) => {
+  const [activeTab, setActiveTab] = useState('projects');
+  const isCompact = containerSize === 'compact';
 
-  const [pipelines] = useState([
-    {
-      id: 1,
-      commit: 'feat: add AI integration',
-      branch: 'codegen-bot',
-      status: 'passed',
-      duration: '3m 24s',
-      timestamp: '2 hours ago'
-    },
-    {
-      id: 2,
-      commit: 'fix: update dependencies',
-      branch: 'main',
-      status: 'failed',
-      duration: '1m 45s',
-      timestamp: '1 day ago'
-    }
-  ]);
+  const projects = [
+    { name: 'web-app', branch: 'main', status: 'active', lastCommit: '2 hours ago' },
+    { name: 'api-service', branch: 'develop', status: 'active', lastCommit: '5 hours ago' },
+    { name: 'mobile-app', branch: 'feature/auth', status: 'inactive', lastCommit: '1 day ago' },
+  ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'passed': return 'text-green-400';
-      case 'failed': return 'text-red-400';
-      case 'running': return 'text-yellow-400';
-      case 'open': return 'text-blue-400';
-      case 'merged': return 'text-green-400';
-      default: return 'text-gray-400';
-    }
-  };
+  const pipelines = [
+    { id: 1, project: 'web-app', status: 'success', branch: 'main', duration: '3m 24s' },
+    { id: 2, project: 'api-service', status: 'running', branch: 'develop', duration: '1m 45s' },
+    { id: 3, project: 'mobile-app', status: 'failed', branch: 'feature/auth', duration: '2m 12s' },
+  ];
+
+  const mergeRequests = [
+    { id: 1, title: 'Add user authentication', author: 'john.doe', status: 'open', target: 'main' },
+    { id: 2, title: 'Fix API response format', author: 'jane.smith', status: 'merged', target: 'develop' },
+    { id: 3, title: 'Update documentation', author: 'bob.wilson', status: 'open', target: 'main' },
+  ];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'passed': return <CheckCircle className="h-4 w-4" />;
-      case 'failed': return <XCircle className="h-4 w-4" />;
-      case 'open': return <GitPullRequest className="h-4 w-4" />;
-      case 'merged': return <CheckCircle className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+      case 'success': return <CheckCircle className="h-4 w-4 text-green-400" />;
+      case 'failed': return <XCircle className="h-4 w-4 text-red-400" />;
+      case 'running': return <Play className="h-4 w-4 text-blue-400" />;
+      default: return <AlertCircle className="h-4 w-4 text-yellow-400" />;
     }
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">GitLab Integration</h1>
-          <p className="text-gray-400">Manage repositories, merge requests, and CI/CD pipelines</p>
-        </div>
-        <div className="flex space-x-2">
-          <Button className="bg-orange-500 hover:bg-orange-600">
-            <Plus className="h-4 w-4 mr-2" />
-            New Repository
-          </Button>
-          <Button variant="outline" className="border-gray-600">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Button>
-        </div>
+    <div className={`space-y-${isCompact ? '3' : '6'} ${isCompact ? 'p-3' : 'p-6'}`}>
+      <div>
+        <h1 className={`font-bold text-white mb-2 flex items-center gap-3 ${isCompact ? 'text-xl' : 'text-3xl'}`}>
+          <GitBranch className={`${isCompact ? 'h-6 w-6' : 'h-8 w-8'} text-orange-400`} />
+          GitLab Integration
+        </h1>
+        <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
+          {isCompact ? 'Manage GitLab projects & CI/CD' : 'Manage your GitLab projects, pipelines, and merge requests'}
+        </p>
       </div>
 
-      <Tabs defaultValue="repositories" className="space-y-4">
+      <Tabs defaultValue="projects" className="space-y-4">
         <TabsList className="bg-gray-800">
-          <TabsTrigger value="repositories">Repositories</TabsTrigger>
-          <TabsTrigger value="merge-requests">Merge Requests</TabsTrigger>
-          <TabsTrigger value="pipelines">Pipelines</TabsTrigger>
+          <TabsTrigger value="projects" className={isCompact ? 'text-xs px-2' : ''}>Projects</TabsTrigger>
+          <TabsTrigger value="pipelines" className={isCompact ? 'text-xs px-2' : ''}>Pipelines</TabsTrigger>
+          <TabsTrigger value="merge-requests" className={isCompact ? 'text-xs px-2' : ''}>
+            {isCompact ? 'MRs' : 'Merge Requests'}
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="repositories" className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input 
-                placeholder="Search repositories..." 
-                className="pl-10 bg-gray-800 border-gray-600"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            {repositories.map((repo) => (
-              <Card key={repo.id} className="bg-gray-800 border-gray-700 p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <GitBranch className="h-5 w-5 text-orange-400" />
-                      <h3 className="text-lg font-semibold text-white">{repo.name}</h3>
-                      <Badge variant="outline" className="border-gray-600 text-gray-300">
-                        {repo.branch}
-                      </Badge>
-                    </div>
-                    <p className="text-gray-400 mb-4">{repo.description}</p>
-                    <div className="flex items-center space-x-6 text-sm text-gray-400">
-                      <span>Last commit: {repo.lastCommit}</span>
-                      <span className="flex items-center">
-                        <GitPullRequest className="h-4 w-4 mr-1" />
-                        {repo.mergeRequests} MRs
-                      </span>
-                      <span className={`flex items-center ${repo.pipelines === 'passing' ? 'text-green-400' : 'text-red-400'}`}>
-                        {repo.pipelines === 'passing' ? 
-                          <CheckCircle className="h-4 w-4 mr-1" /> : 
-                          <XCircle className="h-4 w-4 mr-1" />
-                        }
-                        Pipeline {repo.pipelines}
-                      </span>
-                    </div>
+        <TabsContent value="projects" className="space-y-4">
+          <div className={`grid gap-${isCompact ? '3' : '4'} ${isCompact ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+            {projects.map((project, index) => (
+              <Card key={index} className="bg-gray-800 border-gray-700">
+                <div className={isCompact ? 'p-3' : 'p-4'}>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>{project.name}</h3>
+                    <Badge variant={project.status === 'active' ? 'default' : 'secondary'}>
+                      {project.status}
+                    </Badge>
                   </div>
+                  <p className="text-gray-400 text-sm mb-2">Branch: {project.branch}</p>
+                  <p className="text-gray-500 text-xs mb-3">Last commit: {project.lastCommit}</p>
                   <div className="flex space-x-2">
-                    <Button size="sm" variant="outline" className="border-gray-600">
-                      Clone
+                    <Button size="sm" variant="outline" className="bg-gray-700 border-gray-600 text-gray-300">
+                      <GitCommit className="h-4 w-4 mr-1" />
+                      {isCompact ? 'View' : 'View Commits'}
                     </Button>
-                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-                      Open
+                    <Button size="sm" variant="outline" className="bg-gray-700 border-gray-600 text-gray-300">
+                      <GitPullRequest className="h-4 w-4 mr-1" />
+                      {isCompact ? 'MR' : 'New MR'}
                     </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="merge-requests" className="space-y-4">
-          <div className="grid gap-4">
-            {mergeRequests.map((mr) => (
-              <Card key={mr.id} className="bg-gray-800 border-gray-700 p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <div className={`${getStatusColor(mr.status)}`}>
-                        {getStatusIcon(mr.status)}
-                      </div>
-                      <h3 className="text-lg font-semibold text-white">{mr.title}</h3>
-                      <Badge 
-                        variant="outline" 
-                        className={`border-gray-600 ${getStatusColor(mr.status)}`}
-                      >
-                        {mr.status}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center space-x-6 text-sm text-gray-400">
-                      <span className="flex items-center">
-                        <Users className="h-4 w-4 mr-1" />
-                        {mr.author}
-                      </span>
-                      <span className="flex items-center">
-                        <GitBranch className="h-4 w-4 mr-1" />
-                        {mr.branch}
-                      </span>
-                      <span className="flex items-center">
-                        <GitCommit className="h-4 w-4 mr-1" />
-                        {mr.commits} commits
-                      </span>
-                      <span>Created {mr.created}</span>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button size="sm" variant="outline" className="border-gray-600">
-                      Review
-                    </Button>
-                    {mr.status === 'open' && (
-                      <Button size="sm" className="bg-green-500 hover:bg-green-600">
-                        Merge
-                      </Button>
-                    )}
                   </div>
                 </div>
               </Card>
@@ -233,36 +102,48 @@ export const GitLab = () => {
         </TabsContent>
 
         <TabsContent value="pipelines" className="space-y-4">
-          <div className="grid gap-4">
+          <div className="space-y-3">
             {pipelines.map((pipeline) => (
-              <Card key={pipeline.id} className="bg-gray-800 border-gray-700 p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`${getStatusColor(pipeline.status)}`}>
+              <Card key={pipeline.id} className="bg-gray-800 border-gray-700">
+                <div className={isCompact ? 'p-3' : 'p-4'}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
                       {getStatusIcon(pipeline.status)}
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">{pipeline.commit}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-400 mt-1">
-                        <span className="flex items-center">
-                          <GitBranch className="h-4 w-4 mr-1" />
-                          {pipeline.branch}
-                        </span>
-                        <span>Duration: {pipeline.duration}</span>
-                        <span>{pipeline.timestamp}</span>
+                      <div>
+                        <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                          {pipeline.project}
+                        </h3>
+                        <p className="text-gray-400 text-sm">{pipeline.branch}</p>
                       </div>
                     </div>
+                    <div className="text-right">
+                      <Badge variant={pipeline.status === 'success' ? 'default' : pipeline.status === 'failed' ? 'destructive' : 'secondary'}>
+                        {pipeline.status}
+                      </Badge>
+                      <p className="text-gray-500 text-xs mt-1">{pipeline.duration}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge 
-                      variant="outline" 
-                      className={`border-gray-600 ${getStatusColor(pipeline.status)}`}
-                    >
-                      {pipeline.status}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="merge-requests" className="space-y-4">
+          <div className="space-y-3">
+            {mergeRequests.map((mr) => (
+              <Card key={mr.id} className="bg-gray-800 border-gray-700">
+                <div className={isCompact ? 'p-3' : 'p-4'}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>
+                        {mr.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm">by {mr.author} → {mr.target}</p>
+                    </div>
+                    <Badge variant={mr.status === 'merged' ? 'default' : 'secondary'}>
+                      {mr.status}
                     </Badge>
-                    <Button size="sm" variant="outline" className="border-gray-600">
-                      View Logs
-                    </Button>
                   </div>
                 </div>
               </Card>

@@ -14,6 +14,7 @@ interface ServiceCardProps {
   metrics?: { label: string; value: string }[];
   actions?: { label: string; onClick: () => void }[];
   color: string;
+  containerSize?: string;
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -24,6 +25,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
   metrics = [],
   actions = [],
   color,
+  containerSize,
 }) => {
   const statusColors = {
     online: 'bg-green-500',
@@ -37,18 +39,20 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
     warning: 'Warning',
   };
 
+  const isCompact = containerSize === 'compact';
+
   return (
     <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
-      <div className="p-6">
+      <div className={isCompact ? 'p-3' : 'p-6'}>
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className={`flex items-center justify-between mb-${isCompact ? '2' : '4'}`}>
           <div className="flex items-center space-x-3">
             <div className={cn('p-2 rounded-lg', `bg-${color}-500/10`)}>
-              <Icon className={cn('h-6 w-6', `text-${color}-400`)} />
+              <Icon className={cn(`h-${isCompact ? '4' : '6'} w-${isCompact ? '4' : '6'}`, `text-${color}-400`)} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">{title}</h3>
-              <p className="text-sm text-gray-400">{description}</p>
+              <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-lg'}`}>{title}</h3>
+              <p className={`text-gray-400 ${isCompact ? 'text-xs' : 'text-sm'}`}>{description}</p>
             </div>
           </div>
           <Badge className={cn('text-xs', statusColors[status])}>
@@ -59,10 +63,10 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
 
         {/* Metrics */}
         {metrics.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className={`grid grid-cols-2 gap-${isCompact ? '2' : '4'} mb-${isCompact ? '2' : '4'}`}>
             {metrics.map((metric, index) => (
               <div key={index} className="text-center">
-                <div className="text-2xl font-bold text-white">{metric.value}</div>
+                <div className={`font-bold text-white ${isCompact ? 'text-lg' : 'text-2xl'}`}>{metric.value}</div>
                 <div className="text-xs text-gray-400">{metric.label}</div>
               </div>
             ))}
@@ -77,7 +81,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
                 key={index}
                 onClick={action.onClick}
                 variant="outline"
-                size="sm"
+                size={isCompact ? "sm" : "default"}
                 className="bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
               >
                 {action.label}
