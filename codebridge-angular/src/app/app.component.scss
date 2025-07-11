@@ -1,34 +1,18 @@
 .app-container {
   display: flex;
   height: 100vh;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #0f0f23;
 }
 
 .main-content {
   flex: 1;
-  overflow: auto;
+  margin-left: 280px;
   transition: margin-left 0.3s ease;
-  margin-left: 256px;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
   
   &.sidebar-collapsed {
-    margin-left: 64px;
-  }
-}
-
-.fullscreen-toggle {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 50;
-}
-
-.fullscreen-btn {
-  background-color: rgba(31, 41, 55, 0.8);
-  color: var(--foreground);
-  
-  &:hover {
-    background-color: rgba(55, 65, 81, 0.9);
+    margin-left: 80px;
   }
 }
 
