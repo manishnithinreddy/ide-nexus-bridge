@@ -1,0 +1,21 @@
+<div class="app-container">
+  <app-sidebar 
+    [collapsed]="sidebarCollapsed" 
+    [containerSize]="containerSize"
+    (toggleSidebar)="toggleSidebar()"
+    (menuItemClick)="onMenuItemClick($event)">
+  </app-sidebar>
+  
+  <main class="main-content" [class.sidebar-collapsed]="sidebarCollapsed">
+    <div class="fullscreen-toggle">
+      <button 
+        mat-icon-button 
+        (click)="toggleFullscreen()"
+        class="fullscreen-btn">
+        <lucide-icon [name]="isFullscreen ? 'minimize-2' : 'maximize-2'"></lucide-icon>
+      </button>
+    </div>
+    
+    <router-outlet></router-outlet>
+  </main>
+</div>

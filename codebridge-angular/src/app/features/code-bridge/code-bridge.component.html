@@ -1,0 +1,62 @@
+<div class="code-bridge-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="header-content">
+      <h1 class="title">CodeBridge Platform</h1>
+      <p class="subtitle">Comprehensive development platform with AI-powered tools</p>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <mat-tab-group [(selectedIndex)]="activeTabIndex" class="main-tabs">
+    <mat-tab label="Overview">
+      <div class="tab-content">
+        <!-- Quick Actions and Status -->
+        <div class="overview-grid">
+          <app-quick-actions 
+            [containerSize]="containerSize"
+            (actionClick)="handleQuickAction($event)">
+          </app-quick-actions>
+          
+          <app-status-overview></app-status-overview>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="services-section">
+          <h2 class="section-title">Core Services</h2>
+          <app-service-grid 
+            [services]="services"
+            (serviceClick)="handleServiceClick($event)">
+          </app-service-grid>
+        </div>
+
+        <app-recent-activity></app-recent-activity>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Services">
+      <div class="tab-content">
+        <div class="services-header">
+          <h2 class="section-title">All Services</h2>
+          <p class="section-subtitle">Monitor and manage all CodeBridge platform services</p>
+        </div>
+        <app-service-grid 
+          [services]="services"
+          (serviceClick)="handleServiceClick($event)">
+        </app-service-grid>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="AI Tools">
+      <div class="tab-content">
+        <app-ai-code-generator></app-ai-code-generator>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Activity">
+      <div class="tab-content">
+        <app-recent-activity></app-recent-activity>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

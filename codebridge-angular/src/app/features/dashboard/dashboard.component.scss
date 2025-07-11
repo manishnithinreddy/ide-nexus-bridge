@@ -1,0 +1,70 @@
+.dashboard-container {
+  padding: 24px;
+  
+  &.container-compact {
+    padding: 12px;
+  }
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+  
+  .container-compact & {
+    margin-bottom: 12px;
+  }
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  color: #f9fafb;
+  margin: 0 0 8px 0;
+  
+  .container-compact & {
+    font-size: 24px;
+  }
+}
+
+.subtitle {
+  color: #9ca3af;
+  margin: 0;
+  
+  .container-compact & {
+    font-size: 14px;
+  }
+}
+
+.quick-actions-section {
+  margin-bottom: 24px;
+  
+  .container-compact & {
+    margin-bottom: 12px;
+  }
+}
+
+.services-grid {
+  gap: 24px;
+  margin-bottom: 24px;
+  
+  &.grid-compact {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  &.grid-medium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  
+  &.grid-normal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+  }
+}
+
+.recent-activity-section {
+  margin-top: 24px;
+}

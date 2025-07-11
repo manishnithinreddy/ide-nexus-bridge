@@ -1,0 +1,75 @@
+<div class="api-testing-container">
+  <div class="header">
+    <div class="header-content">
+      <h1 class="title">API Testing</h1>
+      <p class="subtitle">Test REST APIs with powerful request builder</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary">
+        <lucide-icon name="plus"></lucide-icon>
+        New Collection
+      </button>
+      <button mat-stroked-button>
+        <lucide-icon name="settings"></lucide-icon>
+        Settings
+      </button>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <!-- Collections Sidebar -->
+    <div class="collections-sidebar">
+      <mat-card class="collections-card">
+        <mat-card-header>
+          <mat-card-title>Collections</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="collection-list">
+            <div *ngFor="let collection of collections" class="collection-item">
+              <div class="collection-header">
+                <h4>{{ collection.name }}</h4>
+                <span class="status-badge" [class]="'status-' + collection.status">
+                  {{ collection.status }}
+                </span>
+              </div>
+              <div class="collection-meta">
+                <p>{{ collection.requests }} requests</p>
+                <p>Last run: {{ collection.lastRun }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="history-card">
+        <mat-card-header>
+          <mat-card-title>Recent Requests</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="history-list">
+            <div *ngFor="let request of history" class="history-item">
+              <div class="request-header">
+                <span class="method-badge" [class]="'method-' + request.method.toLowerCase()">
+                  {{ request.method }}
+                </span>
+                <span class="status-code" [class]="getStatusClass(request.status)">
+                  {{ request.status }}
+                </span>
+              </div>
+              <p class="request-url">{{ request.url }}</p>
+              <div class="request-meta">
+                <span>{{ request.duration }}</span>
+                <span>{{ request.timestamp }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Main Request Builder -->
+    <div class="request-builder-section">
+      <app-request-builder></app-request-builder>
+    </div>
+  </div>
+</div>

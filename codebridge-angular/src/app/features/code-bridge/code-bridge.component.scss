@@ -1,0 +1,93 @@
+.code-bridge-container {
+  height: 100vh;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+}
+
+.header-section {
+  border-bottom: 1px solid var(--border);
+  background-color: rgba(31, 41, 55, 0.5);
+  backdrop-filter: blur(8px);
+  padding: 24px;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--foreground);
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.main-tabs {
+  flex: 1;
+  
+  ::ng-deep .mat-tab-group {
+    height: 100%;
+    
+    .mat-tab-header {
+      border-bottom: 1px solid var(--border);
+      background-color: var(--background);
+    }
+    
+    .mat-tab-label {
+      color: var(--muted-foreground);
+      
+      &.mat-tab-label-active {
+        color: var(--foreground);
+      }
+    }
+    
+    .mat-tab-body-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}
+
+.tab-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.services-section {
+  margin-bottom: 32px;
+}
+
+.services-header {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 8px 0;
+}
+
+.section-subtitle {
+  color: var(--muted-foreground);
+  margin: 0;
+}

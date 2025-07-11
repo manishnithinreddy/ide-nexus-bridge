@@ -1,0 +1,124 @@
+.quick-actions-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  
+  .container-compact & {
+    padding: 12px;
+  }
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 16px 0;
+  
+  .container-compact & {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+}
+
+.actions-grid {
+  display: grid;
+  gap: 12px;
+  
+  &.grid-compact {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  &.grid-medium {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &.grid-normal {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  height: 80px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  
+  .container-compact & {
+    height: 60px;
+    gap: 4px;
+  }
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  &.bg-purple-500 {
+    background-color: #8b5cf6;
+    &:hover { background-color: #7c3aed; }
+  }
+  
+  &.bg-green-500 {
+    background-color: #10b981;
+    &:hover { background-color: #059669; }
+  }
+  
+  &.bg-blue-500 {
+    background-color: #3b82f6;
+    &:hover { background-color: #2563eb; }
+  }
+  
+  &.bg-cyan-500 {
+    background-color: #06b6d4;
+    &:hover { background-color: #0891b2; }
+  }
+  
+  &.bg-orange-500 {
+    background-color: #f97316;
+    &:hover { background-color: #ea580c; }
+  }
+  
+  &.bg-pink-500 {
+    background-color: #ec4899;
+    &:hover { background-color: #db2777; }
+  }
+}
+
+.action-icon {
+  width: 20px;
+  height: 20px;
+  
+  .container-compact & {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.action-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  
+  .container-compact & {
+    font-size: 10px;
+  }
+  
+  &.hidden {
+    display: none;
+    
+    @media (min-width: 640px) {
+      display: block;
+    }
+  }
+}

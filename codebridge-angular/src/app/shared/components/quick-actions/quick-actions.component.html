@@ -1,0 +1,17 @@
+<div class="quick-actions-card">
+  <h3 class="card-title">Quick Actions</h3>
+  
+  <div class="actions-grid" [class]="getGridClass()">
+    <button 
+      *ngFor="let action of quickActions"
+      mat-raised-button
+      [class]="action.color"
+      (click)="onActionClick(action.id)"
+      class="action-button">
+      <lucide-icon [name]="action.icon" class="action-icon"></lucide-icon>
+      <span class="action-label" [class.hidden]="shouldHideLabel()">
+        {{ containerSize === 'compact' ? action.shortLabel : action.label }}
+      </span>
+    </button>
+  </div>
+</div>

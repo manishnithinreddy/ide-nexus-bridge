@@ -1,0 +1,32 @@
+<div class="dashboard-container" [class]="'container-' + containerSize">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="title">DevOps Dashboard</h1>
+    <p class="subtitle">
+      {{ containerSize === 'compact' ? 'DevOps workflow management' : 'Manage your development workflow from a single interface' }}
+    </p>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <app-quick-actions 
+      [containerSize]="containerSize"
+      (actionClick)="handleQuickAction($event)">
+    </app-quick-actions>
+  </div>
+
+  <!-- Services Grid -->
+  <div class="services-grid" [class]="getGridClass()">
+    <app-service-card 
+      *ngFor="let service of services"
+      [service]="service"
+      [containerSize]="containerSize"
+      (actionClick)="handleServiceAction($event)">
+    </app-service-card>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity-section" *ngIf="containerSize !== 'compact'">
+    <app-recent-activity [containerSize]="containerSize"></app-recent-activity>
+  </div>
+</div>

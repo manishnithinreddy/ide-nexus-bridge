@@ -1,0 +1,38 @@
+<div class="sidebar" [class.collapsed]="collapsed">
+  <!-- Header -->
+  <div class="sidebar-header">
+    <div class="header-content" *ngIf="!collapsed">
+      <h1 class="title">DevOps Toolkit</h1>
+      <p class="subtitle" *ngIf="containerSize !== 'compact'">Cross-platform IDE Plugin</p>
+    </div>
+    
+    <button 
+      mat-icon-button 
+      (click)="onToggle()"
+      class="toggle-btn">
+      <lucide-icon [name]="collapsed ? 'chevron-right' : 'chevron-left'"></lucide-icon>
+    </button>
+  </div>
+
+  <!-- Main Navigation -->
+  <nav class="nav-section">
+    <div class="nav-item" 
+         *ngFor="let item of navigation" 
+         [class.active]="item.route === activeRoute"
+         (click)="navigateTo(item.route)">
+      <lucide-icon [name]="item.icon" [class]="item.color"></lucide-icon>
+      <span class="nav-label" *ngIf="!collapsed">{{ item.name }}</span>
+    </div>
+  </nav>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item" 
+         *ngFor="let item of bottomNavigation"
+         [class.active]="item.route === activeRoute"
+         (click)="navigateTo(item.route)">
+      <lucide-icon [name]="item.icon" class="text-gray-400"></lucide-icon>
+      <span class="nav-label" *ngIf="!collapsed">{{ item.name }}</span>
+    </div>
+  </div>
+</div>
