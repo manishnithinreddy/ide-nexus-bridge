@@ -13,13 +13,7 @@ import {
   Clock
 } from 'lucide-react';
 
-interface RecentActivityProps {
-  containerSize?: string;
-}
-
-export const RecentActivity: React.FC<RecentActivityProps> = ({ containerSize }) => {
-  const isCompact = containerSize === 'compact';
-
+export const RecentActivity: React.FC = () => {
   const activities = [
     {
       id: 1,
@@ -73,19 +67,6 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ containerSize })
     }
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success':
-        return 'bg-green-500';
-      case 'warning':
-        return 'bg-yellow-500';
-      case 'error':
-        return 'bg-red-500';
-      default:
-        return 'bg-blue-500';
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
@@ -101,13 +82,11 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ containerSize })
 
   return (
     <Card className="bg-card border-border">
-      <div className={`${isCompact ? 'p-4' : 'p-6'}`}>
+      <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <Clock className="h-5 w-5 text-primary" />
-            <h3 className={`font-semibold text-foreground ${
-              isCompact ? 'text-base' : 'text-lg'
-            }`}>
+            <h3 className="text-lg font-semibold text-foreground">
               Recent Activity
             </h3>
           </div>
@@ -123,42 +102,25 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ containerSize })
               key={activity.id}
               className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
             >
-              {/* Status Indicator */}
-              <div className="flex-shrink-0 mt-1">
-                <div className={`w-2 h-2 rounded-full ${getStatusColor(activity.status)}`} />
+              <div className="p-2 rounded-md bg-muted">
+                <activity.icon className="h-4 w-4 text-foreground" />
               </div>
 
-              {/* Icon */}
-              <div className="flex-shrink-0">
-                <div className="p-2 rounded-md bg-muted">
-                  <activity.icon className="h-4 w-4 text-foreground" />
-                </div>
-              </div>
-
-              {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className={`font-medium text-foreground ${
-                      isCompact ? 'text-sm' : 'text-base'
-                    }`}>
+                    <p className="font-medium text-foreground text-base">
                       {activity.title}
                     </p>
-                    <p className={`text-muted-foreground mt-1 ${
-                      isCompact ? 'text-xs' : 'text-sm'
-                    }`}>
+                    <p className="text-muted-foreground mt-1 text-sm">
                       {activity.description}
                     </p>
                     <div className="flex items-center space-x-2 mt-2">
-                      <span className={`text-muted-foreground ${
-                        isCompact ? 'text-xs' : 'text-sm'
-                      }`}>
+                      <span className="text-muted-foreground text-sm">
                         {activity.user}
                       </span>
                       <span className="text-muted-foreground">•</span>
-                      <span className={`text-muted-foreground ${
-                        isCompact ? 'text-xs' : 'text-sm'
-                      }`}>
+                      <span className="text-muted-foreground text-sm">
                         {activity.timestamp}
                       </span>
                     </div>
@@ -172,7 +134,6 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ containerSize })
           ))}
         </div>
 
-        {/* Footer */}
         <div className="mt-4 pt-4 border-t border-border">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>Last updated: {new Date().toLocaleTimeString()}</span>

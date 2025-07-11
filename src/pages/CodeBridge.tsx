@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ServiceGrid } from '@/components/CodeBridge/ServiceGrid';
 import { AICodeGenerator } from '@/components/CodeBridge/AICodeGenerator';
@@ -17,15 +18,12 @@ interface CodeBridgeProps {
 export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const { toast } = useToast();
-  const isCompact = containerSize === 'compact';
-  const isMedium = containerSize === 'medium';
 
   const { data: services = [], isLoading, error } = useQuery({
     queryKey: ['services'],
     queryFn: () => codeBridgeApi.getServices(),
   });
 
-  // Show error toast if there's an error
   useEffect(() => {
     if (error) {
       toast({
@@ -36,7 +34,6 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
     }
   }, [error, toast]);
 
-  // Comprehensive service data matching your backend
   const allServices: CodeBridgeService[] = [
     {
       id: 'gateway',
@@ -57,49 +54,35 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
       name: 'Docker Service',
       status: 'online',
       description: 'Container, image, and registry management',
-      endpoints: ['/api/docker/containers', '/api/docker/images', '/api/docker/auth', '/api/docker/registry']
+      endpoints: ['/api/docker/containers', '/api/docker/images', '/api/docker/auth']
     },
     {
       id: 'gitlab',
       name: 'GitLab Service',
       status: 'online',
       description: 'Git integration, CI/CD jobs, and stash management',
-      endpoints: ['/api/gitlab/projects', '/api/gitlab/jobs', '/api/gitlab/auth', '/api/gitlab/stash']
+      endpoints: ['/api/gitlab/projects', '/api/gitlab/jobs', '/api/gitlab/auth']
     },
     {
       id: 'security',
       name: 'Security Service',
       status: 'online',
       description: 'Authentication, RBAC, and API key management',
-      endpoints: ['/api/auth', '/api/users', '/api/roles', '/api/organizations', '/api/api-keys']
+      endpoints: ['/api/auth', '/api/users', '/api/roles', '/api/organizations']
     },
     {
       id: 'monitoring',
       name: 'Monitoring Service',
       status: 'online',
       description: 'Metrics, audit logs, and admin dashboard',
-      endpoints: ['/api/monitoring/metrics', '/api/monitoring/logs', '/api/monitoring/webhooks', '/api/monitoring/admin']
+      endpoints: ['/api/monitoring/metrics', '/api/monitoring/logs', '/api/monitoring/webhooks']
     },
     {
       id: 'server',
       name: 'Server Service',
       status: 'warning',
       description: 'SSH access, remote operations, and server management',
-      endpoints: ['/api/servers', '/api/ssh', '/api/remote', '/api/logs', '/api/proxy']
-    },
-    {
-      id: 'teams',
-      name: 'Teams Service',
-      status: 'online',
-      description: 'Team creation, management, and member operations',
-      endpoints: ['/api/teams', '/api/teams/members', '/api/teams/roles']
-    },
-    {
-      id: 'documentation',
-      name: 'Documentation Service',
-      status: 'online',
-      description: 'API docs, code samples, and service information',
-      endpoints: ['/api/docs', '/api/docs/search', '/api/docs/samples', '/api/docs/public']
+      endpoints: ['/api/servers', '/api/ssh', '/api/remote', '/api/logs']
     }
   ];
 
@@ -120,140 +103,77 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full bg-background">
       {/* Header */}
-      <div className={`border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10 ${
-        isCompact ? 'px-4 py-3' : 'px-6 py-4'
-      }`}>
+      <div className="border-b border-border bg-card/50 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className={`font-bold text-foreground ${
-                  isCompact ? 'text-xl' : 'text-3xl'
-                }`}>
-                  CodeBridge Platform
-                </h1>
-                <p className={`text-muted-foreground ${
-                  isCompact ? 'text-xs' : 'text-sm'
-                }`}>
-                  {isCompact 
-                    ? 'DevOps workflow management' 
-                    : 'Comprehensive development platform with AI-powered tools'
-                  }
-                </p>
-              </div>
-              {isLoading && (
-                <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
-              )}
-            </div>
-            
-            {/* Navigation Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className={`grid w-fit ${
-                isCompact ? 'grid-cols-3' : 'grid-cols-4'
-              } bg-background border border-border`}>
-                <TabsTrigger value="dashboard" className={isCompact ? 'text-xs px-3' : 'px-4'}>
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="services" className={isCompact ? 'text-xs px-3' : 'px-4'}>
-                  Services
-                </TabsTrigger>
-                <TabsTrigger value="ai-tools" className={isCompact ? 'text-xs px-3' : 'px-4'}>
-                  AI Tools
-                </TabsTrigger>
-                {!isCompact && (
-                  <TabsTrigger value="activity" className="px-4">
-                    Activity
-                  </TabsTrigger>
-                )}
-              </TabsList>
-            </Tabs>
-          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            CodeBridge Platform
+          </h1>
+          <p className="text-muted-foreground">
+            Comprehensive development platform with AI-powered tools
+          </p>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className={`max-w-7xl mx-auto ${isCompact ? 'p-4' : 'p-6'}`}>
+      {/* Navigation */}
+      <div className="border-b border-border">
+        <div className="max-w-7xl mx-auto px-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-fit grid-cols-4 bg-background border border-border">
+              <TabsTrigger value="dashboard">Overview</TabsTrigger>
+              <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsContent value="dashboard" className="mt-0 space-y-6">
-            {/* Stats and Quick Actions Row */}
-            <div className={`grid gap-6 ${
-              isCompact 
-                ? 'grid-cols-1' 
-                : isMedium 
-                  ? 'grid-cols-1 xl:grid-cols-2' 
-                  : 'grid-cols-1 lg:grid-cols-2'
-            }`}>
-              <QuickActions 
-                containerSize={containerSize} 
-                onActionClick={handleActionClick}
-              />
-              <StatusOverview containerSize={containerSize} />
+          <TabsContent value="dashboard" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <QuickActions onActionClick={handleActionClick} />
+              <StatusOverview />
             </div>
-            
-            {/* Featured Services Grid */}
             <div>
-              <h2 className={`font-semibold text-foreground mb-4 ${
-                isCompact ? 'text-lg' : 'text-xl'
-              }`}>
+              <h2 className="text-xl font-semibold text-foreground mb-4">
                 Core Services
               </h2>
-              <div className={`grid gap-4 ${
-                isCompact 
-                  ? 'grid-cols-1 sm:grid-cols-2' 
-                  : isMedium
-                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-                    : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-              }`}>
-                {displayServices.slice(0, isCompact ? 4 : 8).map((service) => (
-                  <ServiceGrid 
-                    key={service.id}
-                    services={[service]}
-                    onServiceClick={handleServiceClick}
-                    containerSize={containerSize}
-                  />
-                ))}
-              </div>
+              <ServiceGrid 
+                services={displayServices}
+                onServiceClick={handleServiceClick}
+              />
             </div>
-
-            {/* Recent Activity - Only show in non-compact mode */}
-            {!isCompact && (
-              <RecentActivity containerSize={containerSize} />
-            )}
+            <RecentActivity />
           </TabsContent>
 
-          <TabsContent value="services" className="mt-0">
+          <TabsContent value="services">
             <div className="space-y-6">
               <div>
-                <h2 className={`font-semibold text-foreground ${
-                  isCompact ? 'text-lg' : 'text-xl'
-                }`}>
+                <h2 className="text-xl font-semibold text-foreground mb-2">
                   All Services
                 </h2>
-                <p className={`text-muted-foreground ${
-                  isCompact ? 'text-xs' : 'text-sm'
-                }`}>
+                <p className="text-muted-foreground">
                   Monitor and manage all CodeBridge platform services
                 </p>
               </div>
               <ServiceGrid 
                 services={displayServices}
                 onServiceClick={handleServiceClick}
-                containerSize={containerSize}
               />
             </div>
           </TabsContent>
 
-          <TabsContent value="ai-tools" className="mt-0">
-            <AICodeGenerator containerSize={containerSize} />
+          <TabsContent value="ai-tools">
+            <AICodeGenerator />
           </TabsContent>
 
-          {!isCompact && (
-            <TabsContent value="activity" className="mt-0">
-              <RecentActivity containerSize={containerSize} />
-            </TabsContent>
-          )}
+          <TabsContent value="activity">
+            <RecentActivity />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

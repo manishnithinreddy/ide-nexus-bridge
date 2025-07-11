@@ -7,23 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Wand2, Copy, Download, Sparkles, Code2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useQuery } from '@tanstack/react-query';
-import { codeBridgeApi } from '@/services/codeBridgeApi';
 
-interface AICodeGeneratorProps {
-  containerSize?: string;
-}
-
-export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize }) => {
+export const AICodeGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('gpt-4');
   const [generatedCode, setGeneratedCode] = useState('');
   const [explanation, setExplanation] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const isCompact = containerSize === 'compact';
 
-  // Mock models for demo
   const models = [
     { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' },
     { id: 'claude-3', name: 'Claude 3', provider: 'Anthropic' },
@@ -35,7 +27,6 @@ export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize 
     
     setLoading(true);
     try {
-      // Mock generation for demo
       setTimeout(() => {
         setGeneratedCode(`function helloWorld() {
   console.log("Hello, World!");
@@ -61,26 +52,24 @@ export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize 
   };
 
   return (
-    <div className={`space-y-4 ${isCompact ? '' : 'max-w-none'}`}>
-      {/* Header */}
+    <div className="space-y-6">
       <div className="flex items-center space-x-2">
-        <Sparkles className={`${isCompact ? 'h-5 w-5' : 'h-6 w-6'} text-primary`} />
-        <h2 className={`font-semibold text-foreground ${isCompact ? 'text-base' : 'text-xl'}`}>
+        <Sparkles className="h-6 w-6 text-primary" />
+        <h2 className="text-xl font-semibold text-foreground">
           AI Code Generator
         </h2>
       </div>
 
-      <div className={`grid gap-4 ${isCompact ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-        {/* Input Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-card border-border">
-          <div className={`${isCompact ? 'p-3' : 'p-6'} space-y-4`}>
-            <h3 className={`font-medium text-foreground ${isCompact ? 'text-sm' : 'text-base'}`}>
+          <div className="p-6 space-y-4">
+            <h3 className="font-medium text-foreground">
               Configuration
             </h3>
             
             <div className="space-y-3">
               <div>
-                <label className={`text-foreground block mb-2 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                <label className="text-foreground block mb-2 text-sm">
                   AI Model
                 </label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
@@ -103,16 +92,14 @@ export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize 
               </div>
 
               <div>
-                <label className={`text-foreground block mb-2 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                <label className="text-foreground block mb-2 text-sm">
                   Code Description
                 </label>
                 <Textarea
                   placeholder="Describe what you want the AI to generate..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className={`bg-background border-border text-foreground resize-none ${
-                    isCompact ? 'h-20 text-xs' : 'h-32'
-                  }`}
+                  className="bg-background border-border text-foreground resize-none h-32"
                 />
               </div>
 
@@ -137,11 +124,10 @@ export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize 
           </div>
         </Card>
 
-        {/* Output Section */}
         <Card className="bg-card border-border">
-          <div className={`${isCompact ? 'p-3' : 'p-6'} space-y-4`}>
+          <div className="p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className={`font-medium text-foreground ${isCompact ? 'text-sm' : 'text-base'}`}>
+              <h3 className="font-medium text-foreground">
                 Generated Code
               </h3>
               {generatedCode && (
@@ -168,31 +154,27 @@ export const AICodeGenerator: React.FC<AICodeGeneratorProps> = ({ containerSize 
             {generatedCode ? (
               <div className="space-y-3">
                 <div className="relative">
-                  <pre className={`bg-muted rounded-md p-3 overflow-x-auto text-foreground font-mono ${
-                    isCompact ? 'text-xs max-h-32' : 'text-sm max-h-64'
-                  }`}>
+                  <pre className="bg-muted rounded-md p-3 overflow-x-auto text-foreground font-mono text-sm max-h-64">
                     <code>{generatedCode}</code>
                   </pre>
                 </div>
                 
                 {explanation && (
                   <div className="bg-muted/50 rounded-md p-3">
-                    <h4 className={`text-foreground font-medium mb-2 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                    <h4 className="text-foreground font-medium mb-2 text-sm">
                       Explanation:
                     </h4>
-                    <p className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                    <p className="text-muted-foreground text-sm">
                       {explanation}
                     </p>
                   </div>
                 )}
               </div>
             ) : (
-              <div className={`bg-muted/50 rounded-md text-center text-muted-foreground ${
-                isCompact ? 'py-8' : 'py-16'
-              } space-y-2`}>
-                <Code2 className={`h-${isCompact ? '8' : '12'} w-${isCompact ? '8' : '12'} mx-auto text-muted-foreground/50`} />
-                <p className={isCompact ? 'text-xs' : 'text-sm'}>
-                  {isCompact ? 'Enter prompt above' : 'Enter a description above to generate code with AI'}
+              <div className="bg-muted/50 rounded-md text-center text-muted-foreground py-16 space-y-2">
+                <Code2 className="h-12 w-12 mx-auto text-muted-foreground/50" />
+                <p className="text-sm">
+                  Enter a description above to generate code with AI
                 </p>
               </div>
             )}
