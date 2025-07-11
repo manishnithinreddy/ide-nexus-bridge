@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import { ServiceGrid } from '@/components/CodeBridge/ServiceGrid';
 import { AICodeGenerator } from '@/components/CodeBridge/AICodeGenerator';
 import { QuickActions } from '@/components/CodeBridge/QuickActions';
 import { StatusOverview } from '@/components/CodeBridge/StatusOverview';
-import { SimpleTabSwitcher } from '@/components/Tabs/SimpleTabSwitcher';
 import { useQuery } from '@tanstack/react-query';
 import { codeBridgeApi } from '@/services/codeBridgeApi';
 import { CodeBridgeService } from '@/types/codebridge';
@@ -97,74 +97,83 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
   };
 
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'ai-generator', label: 'AI Generator' },
+    { id: 'dashboard', label: 'Overview' },
+    { id: 'ai-generator', label: 'AI Tools' },
     { id: 'services', label: 'Services' },
   ];
 
   return (
-    <div className={`flex flex-col h-full ${isCompact ? 'p-2' : 'p-6'}`}>
-      <div className="mb-4">
-        <h1 className={`font-bold text-white mb-2 ${isCompact ? 'text-xl' : 'text-3xl'}`}>
-          CodeBridge
-        </h1>
-        <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
-          Comprehensive development platform with AI-powered tools
-        </p>
-      </div>
-
-      <div className="mb-4">
-        <div className="flex space-x-1 bg-gray-800 p-1 rounded-lg">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700'
-              } ${isCompact ? 'px-2 py-1 text-xs' : ''}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <div className={`border-b border-border bg-card ${isCompact ? 'px-4 py-3' : 'px-6 py-4'}`}>
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className={`font-bold text-foreground ${isCompact ? 'text-lg' : 'text-2xl'}`}>
+                CodeBridge
+              </h1>
+              <p className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                Comprehensive development platform
+              </p>
+            </div>
+            {isLoading && (
+              <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
+            )}
+          </div>
+          
+          {/* Tabs */}
+          <div className="flex space-x-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${isCompact ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'} font-medium rounded-md transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      {/* Main Content */}
+      <div className={`${isCompact ? 'p-4' : 'p-6'}`}>
         {activeTab === 'dashboard' && (
-          <div className={`grid gap-${isCompact ? '4' : '6'} ${
-            isCompact ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'
-          }`}>
-            <div className={isCompact ? 'col-span-1' : 'col-span-2'}>
-              <div className={`grid gap-${isCompact ? '4' : '6'} ${
-                isCompact ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'
-              }`}>
-                <QuickActions 
-                  containerSize={containerSize} 
-                  onActionClick={handleActionClick}
-                />
-                <StatusOverview containerSize={containerSize} />
-              </div>
+          <div className={`space-y-${isCompact ? '4' : '6'}`}>
+            {/* Stats Row */}
+            <div className={`grid gap-${isCompact ? '4' : '6'} ${
+              isCompact ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'
+            }`}>
+              <QuickActions 
+                containerSize={containerSize} 
+                onActionClick={handleActionClick}
+              />
+              <StatusOverview containerSize={containerSize} />
             </div>
             
+            {/* Recent Activity - Only show in non-compact mode */}
             {!isCompact && (
-              <div className="space-y-6">
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <h3 className="text-white font-semibold mb-4">Recent Activity</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-gray-300 text-sm">Docker container started</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                      <span className="text-gray-300 text-sm">GitLab job completed</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                      <span className="text-gray-300 text-sm">AI code generated</span>
-                    </div>
+              <div className="bg-card rounded-lg border border-border p-6">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Recent Activity</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">Docker container started successfully</span>
+                    <span className="text-xs text-muted-foreground ml-auto">2 min ago</span>
+                  </div>
+                  <div className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">GitLab pipeline completed</span>
+                    <span className="text-xs text-muted-foreground ml-auto">5 min ago</span>
+                  </div>
+                  <div className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    <span className="text-sm text-foreground">AI code generation completed</span>
+                    <span className="text-xs text-muted-foreground ml-auto">8 min ago</span>
                   </div>
                 </div>
               </div>
@@ -177,12 +186,12 @@ export const CodeBridge: React.FC<CodeBridgeProps> = ({ containerSize }) => {
         )}
 
         {activeTab === 'services' && (
-          <div>
-            <div className="mb-4">
-              <h2 className={`font-semibold text-white ${isCompact ? 'text-lg' : 'text-xl'}`}>
+          <div className={`space-y-${isCompact ? '4' : '6'}`}>
+            <div>
+              <h2 className={`font-semibold text-foreground ${isCompact ? 'text-base' : 'text-xl'}`}>
                 Service Management
               </h2>
-              <p className={`text-gray-400 ${isCompact ? 'text-sm' : ''}`}>
+              <p className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
                 Monitor and manage all CodeBridge services
               </p>
             </div>

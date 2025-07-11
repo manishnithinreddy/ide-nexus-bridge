@@ -2,16 +2,15 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
   Play, 
-  Square, 
   GitBranch, 
   Terminal, 
   Users, 
   Activity,
   Shield,
-  Database
+  Container,
+  Zap
 } from 'lucide-react';
 
 interface QuickActionsProps {
@@ -25,74 +24,80 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ containerSize, onAct
   const actions = [
     { 
       id: 'containers', 
-      label: 'Docker Containers', 
-      icon: Play, 
-      color: 'text-blue-400',
-      description: 'Manage containers'
+      label: 'Containers', 
+      icon: Container, 
+      color: 'bg-blue-500 hover:bg-blue-600',
+      description: 'Manage Docker'
     },
     { 
       id: 'gitlab', 
-      label: 'GitLab Jobs', 
+      label: 'CI/CD', 
       icon: GitBranch, 
-      color: 'text-orange-400',
-      description: 'Trigger CI/CD'
+      color: 'bg-orange-500 hover:bg-orange-600',
+      description: 'GitLab Jobs'
     },
     { 
       id: 'servers', 
-      label: 'SSH Servers', 
+      label: 'SSH', 
       icon: Terminal, 
-      color: 'text-green-400',
-      description: 'Remote access'
+      color: 'bg-green-500 hover:bg-green-600',
+      description: 'Remote Access'
     },
     { 
       id: 'teams', 
       label: 'Teams', 
       icon: Users, 
-      color: 'text-purple-400',
-      description: 'Manage teams'
+      color: 'bg-purple-500 hover:bg-purple-600',
+      description: 'Manage Teams'
     },
     { 
       id: 'monitoring', 
-      label: 'Monitoring', 
+      label: 'Monitor', 
       icon: Activity, 
-      color: 'text-red-400',
-      description: 'View metrics'
+      color: 'bg-red-500 hover:bg-red-600',
+      description: 'View Metrics'
     },
     { 
       id: 'security', 
       label: 'Security', 
       icon: Shield, 
-      color: 'text-yellow-400',
-      description: 'API keys & auth'
+      color: 'bg-yellow-500 hover:bg-yellow-600',
+      description: 'API Keys'
     },
   ];
 
   return (
-    <Card className="bg-gray-800 border-gray-700">
-      <div className={isCompact ? 'p-3' : 'p-4'}>
-        <h3 className={`font-semibold text-white mb-4 ${isCompact ? 'text-sm' : 'text-lg'}`}>
+    <Card className="bg-card border-border">
+      <div className={`${isCompact ? 'p-3' : 'p-4'} space-y-4`}>
+        <h3 className={`font-medium text-foreground ${isCompact ? 'text-sm' : 'text-base'}`}>
           Quick Actions
         </h3>
         
-        <div className={`grid gap-${isCompact ? '2' : '3'} ${
-          isCompact ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
+        <div className={`grid gap-2 ${
+          isCompact 
+            ? 'grid-cols-2' 
+            : 'grid-cols-2 sm:grid-cols-3'
         }`}>
           {actions.map((action) => (
             <Button
               key={action.id}
-              variant="ghost"
+              variant="outline"
               onClick={() => onActionClick(action.id)}
-              className={`${isCompact ? 'p-2 h-auto' : 'p-3 h-auto'} flex flex-col items-start space-y-1 bg-gray-700 hover:bg-gray-600 border border-gray-600`}
+              className={`${
+                isCompact ? 'h-12 p-2' : 'h-16 p-3'
+              } flex flex-col items-center justify-center space-y-1 hover:bg-muted transition-colors group`}
             >
-              <div className="flex items-center space-x-2 w-full">
-                <action.icon className={`${isCompact ? 'h-4 w-4' : 'h-5 w-5'} ${action.color}`} />
-                <span className={`text-white font-medium ${isCompact ? 'text-xs' : 'text-sm'}`}>
+              <action.icon className={`${isCompact ? 'h-4 w-4' : 'h-5 w-5'} text-primary group-hover:text-primary`} />
+              <div className="text-center">
+                <div className={`font-medium text-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
                   {action.label}
-                </span>
+                </div>
+                {!isCompact && (
+                  <div className="text-xs text-muted-foreground">
+                    {action.description}
+                  </div>
+                )}
               </div>
-              <span className={`text-gray-400 ${isCompact ? 'text-xs' : 'text-xs'}`}>
-                {action.description}
-              </span>
             </Button>
           ))}
         </div>

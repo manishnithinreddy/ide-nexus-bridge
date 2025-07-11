@@ -42,8 +42,10 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
   const isCompact = containerSize === 'compact';
 
   return (
-    <div className={`grid gap-${isCompact ? '3' : '4'} ${
-      isCompact ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+    <div className={`grid gap-4 ${
+      isCompact 
+        ? 'grid-cols-1 sm:grid-cols-2' 
+        : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
     }`}>
       {services.map((service) => {
         const IconComponent = serviceIcons[service.id as keyof typeof serviceIcons] || Server;
@@ -51,37 +53,44 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
         return (
           <Card 
             key={service.id} 
-            className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-colors cursor-pointer"
+            className="bg-card border-border hover:border-primary/50 transition-all duration-200 cursor-pointer group"
             onClick={() => onServiceClick(service)}
           >
-            <div className={isCompact ? 'p-3' : 'p-4'}>
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <IconComponent className={`${isCompact ? 'h-4 w-4' : 'h-5 w-5'} text-blue-400`} />
-                  <h3 className={`font-semibold text-white ${isCompact ? 'text-sm' : 'text-base'}`}>
+            <div className={`${isCompact ? 'p-3' : 'p-4'} space-y-3`}>
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-2 min-w-0 flex-1">
+                  <IconComponent className={`${isCompact ? 'h-4 w-4' : 'h-5 w-5'} text-primary flex-shrink-0`} />
+                  <h3 className={`font-medium text-foreground truncate ${isCompact ? 'text-sm' : 'text-base'}`}>
                     {service.name}
                   </h3>
                 </div>
                 <Badge 
                   variant={service.status === 'online' ? 'default' : 'destructive'}
-                  className={isCompact ? 'text-xs' : ''}
+                  className={`flex-shrink-0 ${isCompact ? 'text-xs px-1 py-0' : ''}`}
                 >
                   {service.status}
                 </Badge>
               </div>
               
-              <p className={`text-gray-400 mb-3 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+              {/* Description */}
+              <p className={`text-muted-foreground line-clamp-2 ${isCompact ? 'text-xs' : 'text-sm'}`}>
                 {service.description}
               </p>
               
-              <div className="flex items-center justify-between">
-                <span className={`text-gray-500 ${isCompact ? 'text-xs' : 'text-sm'}`}>
-                  {service.endpoints.length} endpoints
+              {/* Footer */}
+              <div className="flex items-center justify-between pt-2">
+                <span className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
+                  {service.endpoints.length} endpoint{service.endpoints.length !== 1 ? 's' : ''}
                 </span>
                 <Button 
                   size={isCompact ? 'sm' : 'default'} 
                   variant="outline"
-                  className="bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
+                  className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onServiceClick(service);
+                  }}
                 >
                   Manage
                 </Button>
