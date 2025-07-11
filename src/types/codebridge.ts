@@ -2,7 +2,7 @@
 export interface CodeBridgeService {
   id: string;
   name: string;
-  status: 'online' | 'offline' | 'maintenance';
+  status: 'online' | 'offline' | 'maintenance' | 'warning';
   description: string;
   endpoints: string[];
 }

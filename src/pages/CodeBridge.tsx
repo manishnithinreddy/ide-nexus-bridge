@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ServiceGrid } from '@/components/CodeBridge/ServiceGrid';
 import { AICodeGenerator } from '@/components/CodeBridge/AICodeGenerator';
