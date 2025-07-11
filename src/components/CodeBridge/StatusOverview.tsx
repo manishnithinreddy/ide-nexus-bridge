@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useQuery } from '@tanstack/react-query';
 import { codeBridgeApi } from '@/services/codeBridgeApi';
-import { CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { CheckCircle, AlertTriangle, TrendingUp, Activity } from 'lucide-react';
 
 interface StatusOverviewProps {
   containerSize?: string;
@@ -19,90 +19,158 @@ export const StatusOverview: React.FC<StatusOverviewProps> = ({ containerSize })
     queryFn: () => codeBridgeApi.getServices(),
   });
 
-  // Mock data for demo
-  const onlineServices = 6;
-  const totalServices = 6;
-  const uptime = 100;
-  const activeRequests = 42;
+  // Enhanced metrics
+  const stats = {
+    totalServices: 9,
+    onlineServices: 8,
+    warningServices: 1,
+    uptime: 99.8,
+    activeRequests: 156,
+    responseTime: '45ms',
+    totalUsers: 23,
+    apiCalls: '2.3K'
+  };
 
   const statusItems = [
     {
-      label: 'System Status',
-      value: 'Operational',
-      icon: CheckCircle,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10'
-    },
-    {
       label: 'Services Online',
-      value: `${onlineServices}/${totalServices}`,
+      value: `${stats.onlineServices}/${stats.totalServices}`,
       icon: CheckCircle,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10'
     },
     {
       label: 'Uptime',
-      value: `${uptime}%`,
-      icon: CheckCircle,
+      value: `${stats.uptime}%`,
+      icon: TrendingUp,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10'
     },
     {
-      label: 'Active Requests',
-      value: activeRequests.toString(),
-      icon: AlertTriangle,
+      label: 'Response Time',
+      value: stats.responseTime,
+      icon: Activity,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10'
+    },
+    {
+      label: 'Active Users',
+      value: stats.totalUsers.toString(),
+      icon: CheckCircle,
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10'
     }
   ];
 
   return (
     <Card className="bg-card border-border">
-      <div className={`${isCompact ? 'p-3' : 'p-4'} space-y-4`}>
-        <h3 className={`font-medium text-foreground ${isCompact ? 'text-sm' : 'text-base'}`}>
-          System Status
+      <div className={`${isCompact ? 'p-4' : 'p-6'}`}>
+        <h3 className={`font-semibold text-foreground mb-4 ${
+          isCompact ? 'text-base' : 'text-lg'
+        }`}>
+          Platform Status
         </h3>
         
         {/* Overall Status */}
-        <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-md">
-          <div className="flex items-center space-x-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span className={`font-medium text-foreground ${isCompact ? 'text-sm' : 'text-base'}`}>
-              All Systems Operational
-            </span>
+        <div className="flex items-center justify-between p-4 bg-green-500/10 rounded-lg mb-4">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="h-5 w-5 text-green-500" />
+            <div>
+              <span className={`font-medium text-foreground ${
+                isCompact ? 'text-sm' : 'text-base'
+              }`}>
+                System Operational
+              </span>
+              {!isCompact && (
+                <p className="text-xs text-muted-foreground">
+                  All core services are running normally
+                </p>
+              )}
+            </div>
           </div>
-          <Badge variant="outline" className="bg-green-500/20 text-green-700 border-green-500/30">
-            {uptime}% Uptime
+          <Badge className="bg-green-500/20 text-green-700 border-green-500/30">
+            {stats.uptime}% Uptime
           </Badge>
         </div>
         
-        {/* Status Grid */}
-        <div className={`grid gap-3 ${
+        {/* Metrics Grid */}
+        <div className={`grid gap-3 mb-4 ${
           isCompact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-4'
         }`}>
-          {statusItems.slice(1).map((item, index) => (
-            <div key={index} className="text-center p-2 rounded-md bg-muted/50">
-              <div className={`text-lg font-bold text-foreground ${isCompact ? 'text-base' : 'text-xl'}`}>
+          {statusItems.map((item, index) => (
+            <div key={index} className="text-center p-3 rounded-lg bg-muted/30">
+              <div className={`text-lg font-bold text-foreground ${
+                isCompact ? 'text-base' : 'text-xl'
+              }`}>
                 {item.value}
               </div>
-              <div className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
+              <div className={`text-muted-foreground ${
+                isCompact ? 'text-xs' : 'text-sm'
+              }`}>
                 {item.label}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Services Progress */}
+        {/* Additional Stats Row */}
+        <div className={`grid gap-3 mb-4 ${
+          isCompact ? 'grid-cols-2' : 'grid-cols-2'
+        }`}>
+          <div className="text-center p-3 rounded-lg bg-blue-500/10">
+            <div className={`text-lg font-bold text-blue-600 ${
+              isCompact ? 'text-base' : 'text-xl'
+            }`}>
+              {stats.apiCalls}
+            </div>
+            <div className={`text-muted-foreground ${
+              isCompact ? 'text-xs' : 'text-sm'
+            }`}>
+              API Calls Today
+            </div>
+          </div>
+          <div className="text-center p-3 rounded-lg bg-purple-500/10">
+            <div className={`text-lg font-bold text-purple-600 ${
+              isCompact ? 'text-base' : 'text-xl'
+            }`}>
+              {stats.activeRequests}
+            </div>
+            <div className={`text-muted-foreground ${
+              isCompact ? 'text-xs' : 'text-sm'
+            }`}>
+              Active Requests
+            </div>
+          </div>
+        </div>
+
+        {/* Services Health Progress */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className={`text-muted-foreground ${isCompact ? 'text-xs' : 'text-sm'}`}>
+            <span className={`text-muted-foreground ${
+              isCompact ? 'text-xs' : 'text-sm'
+            }`}>
               Services Health
             </span>
-            <span className={`text-foreground font-medium ${isCompact ? 'text-xs' : 'text-sm'}`}>
-              {onlineServices}/{totalServices}
+            <span className={`text-foreground font-medium ${
+              isCompact ? 'text-xs' : 'text-sm'
+            }`}>
+              {Math.round((stats.onlineServices / stats.totalServices) * 100)}%
             </span>
           </div>
-          <Progress value={100} className="h-2" />
+          <Progress 
+            value={(stats.onlineServices / stats.totalServices) * 100} 
+            className="h-2"
+          />
+          {stats.warningServices > 0 && (
+            <div className="flex items-center space-x-2 mt-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              <span className={`text-yellow-600 ${
+                isCompact ? 'text-xs' : 'text-sm'
+              }`}>
+                {stats.warningServices} service needs attention
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </Card>
